@@ -1,0 +1,1918 @@
+<!DOCTYPE html>
+<html lang="si">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="color-scheme" content="dark">
+<title>Sasiru Science Lab — Physics · Chemistry · Maths · AI Tutor</title>
+<style>
+/* ============ THEME ============ */
+:root{
+  --primary:#ff3b5c;
+  --primary-2:#ff7a90;
+  --primary-dark:#c81e44;
+  --primary-soft:rgba(255,59,92,.13);
+  --primary-glow:rgba(255,59,92,.35);
+  --amber:#ffb020;
+  --green:#2ee6a8;
+  --bg:#08080d;
+  --surface:#12121c;
+  --surface-2:#1a1a27;
+  --surface-3:#22222f;
+  --border:rgba(255,255,255,.08);
+  --border-strong:rgba(255,255,255,.15);
+  --text:#f4f4f8;
+  --muted:#9a9ab2;
+  --radius:16px;
+  --radius-sm:11px;
+  --font:Inter,"Noto Sans Sinhala",system-ui,-apple-system,sans-serif;
+  --mono:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{
+  font-family:var(--font);background:var(--bg);color:var(--text);line-height:1.55;min-height:100vh;
+  background-image:
+    radial-gradient(900px 520px at 85% -10%,rgba(255,59,92,.15),transparent 62%),
+    radial-gradient(760px 520px at -5% 105%,rgba(255,59,92,.07),transparent 60%);
+  background-attachment:fixed;
+  -webkit-font-smoothing:antialiased;
+}
+button,select,input,textarea{font:inherit;color:inherit}
+a{color:var(--primary-2)}
+::selection{background:var(--primary);color:#fff}
+::-webkit-scrollbar{width:10px;height:10px}
+::-webkit-scrollbar-thumb{background:#2c2c3c;border-radius:8px}
+::-webkit-scrollbar-thumb:hover{background:#3c3c52}
+
+/* ============ TOP BAR ============ */
+.topbar{
+  position:sticky;top:0;z-index:80;display:flex;flex-wrap:wrap;gap:14px;align-items:center;justify-content:space-between;
+  padding:11px clamp(12px,3.5vw,36px);
+  background:rgba(8,8,13,.8);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);
+  border-bottom:1px solid var(--border);
+}
+.brand{display:flex;align-items:center;gap:11px;font-weight:900;letter-spacing:.04em;font-size:15px}
+.logo{
+  width:42px;height:42px;border-radius:13px;display:grid;place-items:center;flex-shrink:0;
+  background:linear-gradient(135deg,var(--primary),var(--primary-dark));
+  box-shadow:0 0 26px var(--primary-glow);font-size:20px;color:#fff;
+}
+.brand small{display:block;font-size:9.5px;letter-spacing:.19em;color:var(--muted);font-weight:800;margin-top:2px}
+.tabs{display:flex;gap:6px;flex-wrap:wrap}
+.tab{
+  border:1px solid var(--border);background:var(--surface);color:var(--muted);
+  padding:9px 14px;border-radius:999px;font-weight:800;font-size:13px;cursor:pointer;
+  display:flex;gap:7px;align-items:center;transition:.2s;white-space:nowrap;
+}
+.tab:hover{color:var(--text);border-color:var(--border-strong);transform:translateY(-1px)}
+.tab.active{
+  background:linear-gradient(135deg,var(--primary),var(--primary-dark));color:#fff;
+  border-color:transparent;box-shadow:0 8px 26px var(--primary-glow);
+}
+
+/* ============ VIEWS ============ */
+.view{display:none}
+.view.active{display:block;animation:fade .35s ease}
+@keyframes fade{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
+.wrap{max-width:1400px;margin:0 auto;padding:0 clamp(14px,3.5vw,36px) 52px}
+.hero{padding:clamp(30px,5vw,62px) clamp(14px,3.5vw,36px) 28px;max-width:1400px;margin:0 auto}
+.eyebrow{color:var(--primary);font-size:11.5px;font-weight:900;letter-spacing:.22em;text-transform:uppercase}
+.hero h1{font-size:clamp(30px,5.4vw,58px);line-height:1.05;letter-spacing:-.035em;margin:14px 0;max-width:920px}
+.hero h1 .grad{background:linear-gradient(110deg,var(--primary),#ff8fa3 55%,var(--amber));-webkit-background-clip:text;background-clip:text;color:transparent}
+.hero p{max-width:740px;color:var(--muted);font-size:15px;line-height:1.75}
+.hero-actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:24px}
+.page-head{padding:clamp(24px,4vw,44px) 0 22px}
+.page-head h2{font-size:clamp(24px,3.4vw,36px);letter-spacing:-.02em;margin:8px 0 8px}
+.page-head p{color:var(--muted);font-size:14px;max-width:760px;line-height:1.7}
+
+/* ============ BUTTONS ============ */
+button{cursor:pointer;border:0;border-radius:var(--radius-sm);padding:11px 16px;font-weight:800;transition:.18s}
+button:hover{filter:brightness(1.09);transform:translateY(-1px)}
+button:active{transform:translateY(0)}
+.btn-primary{background:linear-gradient(135deg,var(--primary),var(--primary-dark));color:#fff;box-shadow:0 8px 22px var(--primary-glow)}
+.btn-secondary{background:var(--surface-2);color:var(--text);border:1px solid var(--border-strong)}
+.btn-ghost{background:transparent;color:var(--muted);border:1px solid var(--border)}
+.btn-ghost:hover{color:var(--text);border-color:var(--border-strong)}
+.btn-sm{padding:8px 12px;font-size:12px}
+
+/* ============ PANELS / CARDS ============ */
+.panel{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);overflow:hidden}
+.panel-head{padding:15px 18px;display:flex;justify-content:space-between;align-items:center;gap:12px;border-bottom:1px solid var(--border)}
+.panel-head h2{font-size:15.5px;margin:0;letter-spacing:-.01em}
+.panel-head span{font-size:10px;font-weight:900;letter-spacing:.14em;color:var(--primary)}
+.panel-body{padding:16px}
+.card-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(255px,1fr));gap:16px;margin-top:6px}
+.home-card{
+  background:linear-gradient(160deg,var(--surface),var(--surface-2));
+  border:1px solid var(--border);border-radius:var(--radius);padding:22px;
+  position:relative;overflow:hidden;transition:.25s;cursor:pointer;text-align:left;
+  display:block;width:100%;color:var(--text);
+}
+.home-card:hover{transform:translateY(-4px);border-color:rgba(255,59,92,.5);box-shadow:0 20px 48px rgba(0,0,0,.5)}
+.home-card .ico{width:50px;height:50px;border-radius:14px;display:grid;place-items:center;font-size:23px;background:var(--primary-soft);color:var(--primary);margin-bottom:15px}
+.home-card h3{font-size:17px;margin-bottom:6px}
+.home-card p{color:var(--muted);font-size:13px;line-height:1.6}
+.home-card .arrow{position:absolute;top:20px;right:20px;color:var(--primary);opacity:.55;font-size:18px}
+.stat-strip{
+  display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:12px;margin-top:18px;
+}
+.stat-strip > div{
+  background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:16px;text-align:center;
+}
+.stat-strip b{display:block;font-size:26px;color:var(--primary);letter-spacing:-.02em;line-height:1.1}
+.stat-strip span{font-size:11.5px;color:var(--muted);font-weight:700}
+.grid-2{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:18px;margin-top:18px}
+.muted{color:var(--muted);font-size:13px;line-height:1.65}
+
+/* ============ FORMS ============ */
+input[type=text],input[type=number],select,textarea{
+  width:100%;background:var(--surface-2);border:1px solid var(--border);
+  border-radius:10px;padding:10px 12px;font-size:13.5px;transition:.15s;
+}
+input:focus,select:focus,textarea:focus{outline:0;border-color:var(--primary);box-shadow:0 0 0 3px var(--primary-soft)}
+label{font-size:12px;font-weight:800;color:var(--muted);display:block;margin-bottom:5px}
+input[type=range]{width:100%;accent-color:var(--primary);cursor:pointer}
+.field{margin-bottom:11px}
+.field-row{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+output{color:var(--primary);font-variant-numeric:tabular-nums;font-weight:900}
+
+/* ============ PHYSICS ============ */
+.layout{display:grid;grid-template-columns:minmax(0,1.55fr) minmax(290px,.85fr);gap:18px;align-items:start}
+.canvas-wrap{
+  position:relative;border-radius:14px;overflow:hidden;min-height:350px;
+  background:radial-gradient(circle at 50% 45%,#2a1018,#08080d 72%);
+  border:1px solid var(--border);
+}
+canvas{display:block;width:100%;height:350px;touch-action:pan-y}
+.canvas-label{position:absolute;top:12px;left:12px;background:rgba(8,8,13,.82);color:#d8c4ca;border:1px solid var(--border);border-radius:8px;padding:6px 10px;font-size:10.5px;font-weight:800;letter-spacing:.08em;pointer-events:none}
+.canvas-hint{position:absolute;bottom:11px;right:12px;color:#8f7d85;font-size:10px;pointer-events:none}
+.control-grid{display:grid;grid-template-columns:1fr 1fr;gap:11px;margin-top:14px}
+.control{background:var(--surface-2);padding:12px 13px;border-radius:12px;border:1px solid var(--border)}
+.control label{display:flex;justify-content:space-between;gap:8px;font-size:12px;font-weight:800;color:var(--text);margin-bottom:9px}
+.control output{color:var(--primary);font-variant-numeric:tabular-nums}
+.readouts{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:13px}
+.readout{padding:12px;background:var(--surface-2);border-radius:12px;min-width:0;border:1px solid var(--border)}
+.readout small{display:block;color:var(--muted);font-size:9.5px;font-weight:800;letter-spacing:.09em;margin-bottom:6px}
+.readout strong{font-size:clamp(15px,1.9vw,20px);color:var(--primary);overflow-wrap:anywhere;font-variant-numeric:tabular-nums}
+.right-stack{display:grid;gap:18px}
+.experiment-list{padding:9px;display:grid;gap:5px;max-height:420px;overflow:auto}
+.exp{text-align:left;display:flex;align-items:center;gap:11px;background:transparent;color:var(--text);border:1px solid transparent;padding:10px;width:100%;border-radius:11px}
+.exp:hover{background:var(--surface-2)}
+.exp.active{background:var(--primary-soft);border-color:rgba(255,59,92,.42)}
+.exp-icon{width:36px;height:36px;display:grid;place-items:center;border-radius:10px;background:rgba(255,59,92,.14);color:var(--primary);font-size:17px;flex-shrink:0;font-weight:900}
+.exp b{display:block;font-size:12.5px}
+.exp small{display:block;margin-top:2px;color:var(--muted);font-size:10.5px;font-weight:600}
+.info{padding:17px 19px}
+.info h3{margin:0 0 8px;font-size:17px}
+.info p,.info li{color:var(--muted);font-size:12.5px;line-height:1.65}
+.info ul{padding-left:18px;margin-top:8px}
+.info li{margin-bottom:4px}
+.formula{font-family:var(--mono);background:var(--bg);padding:12px;border-radius:10px;color:var(--primary);font-size:13.5px;overflow-wrap:anywhere;border:1px solid var(--border);margin:10px 0}
+.quiz{padding:17px 19px}
+.quiz p.q{font-size:13px;line-height:1.6;margin-bottom:10px}
+.quiz label.opt{display:flex;gap:9px;margin:9px 0;font-size:12.5px;align-items:flex-start;color:var(--text);cursor:pointer;font-weight:600;background:var(--surface-2);padding:10px 11px;border-radius:10px;border:1px solid var(--border);transition:.15s}
+.quiz label.opt:hover{border-color:rgba(255,59,92,.45)}
+.quiz input[type=radio]{accent-color:var(--primary);margin-top:2px}
+.feedback{min-height:20px;font-size:12px;color:var(--primary);margin-top:9px;font-weight:700}
+
+/* ============ CHEMISTRY ============ */
+.library{display:grid;grid-template-columns:minmax(240px,.82fr) minmax(300px,1.18fr);gap:18px}
+.species-list{max-height:520px;overflow:auto;display:grid;gap:5px;margin-top:11px;padding-right:3px}
+.species{display:flex;justify-content:space-between;gap:8px;text-align:left;width:100%;background:transparent;color:var(--text);border:1px solid transparent;padding:9px 10px;border-radius:10px}
+.species:hover{background:var(--surface-2)}
+.species.active{background:var(--primary-soft);border-color:rgba(255,59,92,.45)}
+.species b{font-size:12.5px}
+.species small{font-size:11px;color:var(--muted)}
+.pill{display:inline-block;background:var(--surface-3);color:var(--muted);padding:3px 9px;border-radius:20px;font-size:10.5px;font-weight:800;white-space:nowrap}
+.formula-big{font-size:24px;font-weight:900;letter-spacing:-.02em;color:var(--primary);margin:2px 0 10px}
+.mol-wrap{background:radial-gradient(circle at 50% 45%,#1e1218,#0b0b12);border-radius:14px;overflow:hidden;border:1px solid var(--border)}
+#moleculeCanvas{width:100%;height:320px;display:block;touch-action:none;cursor:grab}
+#moleculeCanvas:active{cursor:grabbing}
+.stats{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px;margin:13px 0}
+.stat{padding:10px;background:var(--surface-2);border-radius:10px;border:1px solid var(--border)}
+.stat small{display:block;color:var(--muted);font-size:10px;font-weight:700;margin-bottom:3px}
+.stat b{font-size:13px}
+.detailbox{padding:12px;border-left:3px solid var(--primary);background:var(--surface-2);border-radius:0 10px 10px 0;margin-top:9px;font-size:12.5px;line-height:1.6;white-space:pre-line;color:var(--muted)}
+.detailbox b{color:var(--text);display:block;margin-bottom:4px}
+.atom-legend{display:flex;gap:10px;flex-wrap:wrap;font-size:11px;margin:9px 0;color:var(--muted);font-weight:700}
+.adot{display:inline-block;width:10px;height:10px;border-radius:50%;margin-right:4px;vertical-align:middle}
+.calc-out{font-family:var(--mono);font-size:12.5px;color:var(--primary);white-space:pre-line;margin-top:10px;background:var(--bg);padding:11px;border-radius:10px;border:1px solid var(--border);min-height:42px;line-height:1.7}
+.rev-item{display:flex;gap:9px;align-items:center;font-size:12.5px;padding:8px 10px;background:var(--surface-2);border-radius:9px;margin-bottom:6px;cursor:pointer;border:1px solid var(--border)}
+.rev-item input{accent-color:var(--primary)}
+.rev-item:has(input:checked){border-color:rgba(46,230,168,.4);background:rgba(46,230,168,.07)}
+.notice{border:1px solid rgba(255,176,32,.35);background:rgba(255,176,32,.08);padding:12px 14px;border-radius:12px;color:#ffd68a;font-size:12.5px;margin:16px 0;line-height:1.65}
+
+/* ============ MATH ============ */
+.formula-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:16px;margin-top:6px}
+.fcard{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:18px}
+.fcard h4{font-size:14px;color:var(--primary);margin-bottom:11px;display:flex;align-items:center;gap:8px;letter-spacing:.02em}
+.frow{display:flex;justify-content:space-between;gap:12px;padding:7px 0;border-bottom:1px dashed rgba(255,255,255,.07);font-size:12.5px;align-items:baseline;flex-wrap:wrap}
+.frow:last-child{border-bottom:0}
+.frow span{color:var(--muted);font-weight:600}
+.frow code{font-family:var(--mono);color:var(--text);font-size:12px;background:var(--bg);padding:3px 7px;border-radius:6px;border:1px solid var(--border);white-space:nowrap;overflow-wrap:anywhere}
+.calc-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(290px,1fr));gap:16px;margin-top:6px}
+.calc-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:18px}
+.calc-card h4{font-size:14.5px;margin-bottom:4px}
+.calc-card .hint{font-size:11.5px;color:var(--muted);margin-bottom:12px}
+.calc-card button{width:100%;margin-top:4px}
+
+/* ============ AI TUTOR ============ */
+.ai-shell{display:grid;grid-template-columns:minmax(0,1.35fr) minmax(290px,.75fr);gap:18px;align-items:start}
+.ai-box{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:20px}
+.ai-box h3{font-size:17px;margin-bottom:5px}
+.chip-row{display:flex;gap:7px;flex-wrap:wrap;margin:12px 0}
+.chip{background:var(--surface-2);border:1px solid var(--border);color:var(--muted);padding:7px 12px;border-radius:999px;font-size:11.5px;font-weight:800;cursor:pointer;transition:.15s}
+.chip:hover{color:var(--text);border-color:var(--border-strong)}
+.chip.active{background:var(--primary-soft);border-color:rgba(255,59,92,.5);color:var(--primary)}
+#aiQuestion{min-height:110px;resize:vertical;margin-top:10px;font-size:14px;line-height:1.6;padding:14px}
+.provider-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:9px;margin-top:14px}
+.provider{
+  display:flex;align-items:center;gap:9px;padding:12px;border-radius:12px;
+  background:var(--surface-2);border:1px solid var(--border);color:var(--text);
+  font-weight:800;font-size:13px;transition:.18s;text-align:left;width:100%;
+}
+.provider:hover{border-color:var(--primary);background:var(--primary-soft);transform:translateY(-2px)}
+.provider .pdot{width:26px;height:26px;border-radius:8px;display:grid;place-items:center;font-size:13px;background:var(--surface-3);flex-shrink:0}
+.quick-answer{background:var(--surface-2);border:1px solid var(--border);border-radius:12px;padding:14px;margin-top:14px;font-size:13px;line-height:1.7;white-space:pre-line;color:var(--muted);min-height:56px}
+.quick-answer b{color:var(--primary)}
+.ai-side{display:grid;gap:18px}
+.sample-q{display:block;width:100%;text-align:left;background:var(--surface-2);border:1px solid var(--border);color:var(--muted);padding:10px 12px;border-radius:10px;font-size:12px;font-weight:700;margin-bottom:7px;transition:.15s}
+.sample-q:hover{color:var(--text);border-color:var(--primary);transform:translateX(3px)}
+
+/* ============ TOAST / FOOTER ============ */
+.toast{
+  position:fixed;bottom:24px;left:50%;transform:translateX(-50%) translateY(24px);
+  background:var(--surface-3);border:1px solid var(--border-strong);color:var(--text);
+  padding:12px 20px;border-radius:12px;font-weight:800;font-size:13px;
+  opacity:0;pointer-events:none;transition:.32s;z-index:300;box-shadow:0 16px 40px rgba(0,0,0,.6);
+}
+.toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+.footer{text-align:center;padding:30px 16px 36px;border-top:1px solid var(--border);color:var(--muted);font-size:12px;margin-top:20px}
+.footer strong{color:var(--primary);letter-spacing:.04em}
+.footer .fline{margin-top:6px;font-size:11px;opacity:.75}
+
+/* ============ RESPONSIVE ============ */
+@media(max-width:980px){
+  .layout,.library,.ai-shell{grid-template-columns:1fr}
+  .right-stack{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .right-stack .panel:first-child{grid-row:span 2}
+}
+@media(max-width:640px){
+  .right-stack{grid-template-columns:1fr}
+  .right-stack .panel:first-child{grid-row:auto}
+  .control-grid{grid-template-columns:1fr 1fr}
+  .readouts{grid-template-columns:1fr 1fr 1fr}
+  .canvas-wrap,canvas{min-height:280px;height:280px}
+  #moleculeCanvas{height:270px}
+  .tabs{gap:4px}
+  .tab{padding:8px 11px;font-size:12px}
+  .brand small{display:none}
+  .field-row{grid-template-columns:1fr}
+}
+</style>
+</head>
+<body>
+
+<!-- ================= TOP BAR ================= -->
+<header class="topbar">
+  <div class="brand">
+    <div class="logo">∿</div>
+    <div>SASIRU SCIENCE LAB<small>PHYSICS · CHEMISTRY · MATHS · AI TUTOR</small></div>
+  </div>
+  <nav class="tabs">
+    <button class="tab active" data-view="home">🏠 Home</button>
+    <button class="tab" data-view="physics">⚛️ Physics</button>
+    <button class="tab" data-view="chemistry">🧪 Chemistry</button>
+    <button class="tab" data-view="math">∑ Maths</button>
+    <button class="tab" data-view="ai">🤖 AI Tutor</button>
+  </nav>
+</header>
+
+<!-- ================= HOME ================= -->
+<section class="view active" id="view-home">
+  <div class="hero">
+    <div class="eyebrow">Sri Lanka G.C.E. A/L · Interactive Learning Hub</div>
+    <h1>Learn science by <span class="grad">seeing it happen.</span></h1>
+    <p>භෞතික විද්‍යාව, රසායන විද්‍යාව සහ ගණිතය — interactive simulations, 100+ chemical species, සම්පූර්ණ formula library, ගණනය කිරීම් සහ AI tutor එකක් එකම තැනක. පරාමිතීන් වෙනස් කරන්න, ප්‍රතිඵල නිරීක්ෂණය කරන්න, ප්‍රශ්න අසන්න.</p>
+    <div class="hero-actions">
+      <button class="btn-primary" onclick="showView('physics')">▶ Physics Lab</button>
+      <button class="btn-secondary" onclick="showView('chemistry')">🧪 Chemistry Lab</button>
+      <button class="btn-secondary" onclick="showView('math')">∑ Mathematics</button>
+      <button class="btn-secondary" onclick="showView('ai')">🤖 Ask AI Tutor</button>
+    </div>
+  </div>
+  <div class="wrap">
+    <div class="card-grid">
+      <button class="home-card" onclick="showView('physics')">
+        <span class="arrow">↗</span>
+        <div class="ico">⚛️</div>
+        <h3>Physics Virtual Lab</h3>
+        <p>Projectile motion, pendulum, SHM, waves, Ohm's law, lenses, energy, magnetism, collisions සහ circular motion — live simulations 10ක්.</p>
+      </button>
+      <button class="home-card" onclick="showView('chemistry')">
+        <span class="arrow">↗</span>
+        <div class="ico">🧪</div>
+        <h3>Chemistry 3D Lab</h3>
+        <p>100+ අණු සහ අයන, 3D schematic viewer, VSEPR හැඩයන්, mole / concentration / pH calculators සහ quiz.</p>
+      </button>
+      <button class="home-card" onclick="showView('math')">
+        <span class="arrow">↗</span>
+        <div class="ico">∑</div>
+        <h3>Mathematics Hub</h3>
+        <p>සම්පූර්ණ formula wall එකක් (algebra, trig, calculus, geometry, stats) සහ interactive calculators 7ක්.</p>
+      </button>
+      <button class="home-card" onclick="showView('ai')">
+        <span class="arrow">↗</span>
+        <div class="ico">🤖</div>
+        <h3>AI Tutor</h3>
+        <p>ඕනෑම ප්‍රශ්නයක් අසන්න — ලෝකයේ හොඳම AI models (ChatGPT, Claude, Gemini, Perplexity, Copilot, Grok, DeepSeek) වෙත කෙලින්ම යවන්න.</p>
+      </button>
+    </div>
+
+    <div class="stat-strip">
+      <div><b>10</b><span>Physics simulations</span></div>
+      <div><b>100+</b><span>Chemical species</span></div>
+      <div><b>60+</b><span>Formulas &amp; identities</span></div>
+      <div><b>7</b><span>Math calculators</span></div>
+      <div><b>7</b><span>AI providers</span></div>
+    </div>
+
+    <div class="grid-2">
+      <div class="panel">
+        <div class="panel-head"><h2>📈 Your progress</h2><span>LOCAL TO THIS DEVICE</span></div>
+        <div class="panel-body">
+          <div class="stats" style="grid-template-columns:repeat(3,1fr)">
+            <div class="stat"><small>PHYSICS BEST</small><b id="progPhys">0 / 1</b></div>
+            <div class="stat"><small>CHEMISTRY BEST</small><b id="progChem">0 / 1</b></div>
+            <div class="stat"><small>MATHS BEST</small><b id="progMath">0 / 1</b></div>
+          </div>
+          <p class="muted">එක් එක් subject එකේ quiz එක සම්පූර්ණ කර ඔබේ ප්‍රගතිය මෙතැනින් බලන්න. ප්‍රගතිය ඔබේ browser එකේ පමණක් සුරැකේ.</p>
+          <div class="chip-row">
+            <button class="chip" onclick="showView('physics')">Physics quiz →</button>
+            <button class="chip" onclick="showView('chemistry')">Chemistry quiz →</button>
+            <button class="chip" onclick="showView('math')">Maths quiz →</button>
+          </div>
+        </div>
+      </div>
+      <div class="panel">
+        <div class="panel-head"><h2>🎯 Study plan</h2><span>DAILY ROUTINE</span></div>
+        <div class="panel-body">
+          <div class="rev-item"><input type="checkbox"> පාඩම කියවන්න / concept එක තේරුම් ගන්න</div>
+          <div class="rev-item"><input type="checkbox"> Simulation එකේ පරාමිතීන් වෙනස් කරලා බලන්න</div>
+          <div class="rev-item"><input type="checkbox"> Formula එක ලියලා අභ්‍යාසයක් කරන්න</div>
+          <div class="rev-item"><input type="checkbox"> Quiz එක කරන්න (70%+ ඉලක්කය)</div>
+          <div class="rev-item"><input type="checkbox"> වැරදුණු තැන් AI Tutor එකෙන් අහන්න</div>
+          <div class="rev-item"><input type="checkbox"> Past paper ප්‍රශ්නයක් විසඳන්න</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= PHYSICS ================= -->
+<section class="view" id="view-physics">
+  <div class="wrap">
+    <div class="page-head">
+      <div class="eyebrow">A/L Physics · Interactive Simulations</div>
+      <h2>Physics Virtual Lab</h2>
+      <p>පරාමිතීන් වෙනස් කරන්න, ප්‍රතිඵල නිරීක්ෂණය කරන්න. සෑම module එකකම concept, formula, සහ quick check එකක් ඇත.</p>
+    </div>
+    <div class="layout">
+      <section class="panel">
+        <div class="panel-head"><h2 id="expTitle">Projectile Motion</h2><span>LIVE SIMULATION</span></div>
+        <div class="panel-body">
+          <div class="canvas-wrap">
+            <canvas id="scene" aria-label="Interactive physics experiment animation"></canvas>
+            <div class="canvas-label" id="sceneLabel">MOTION TRACK · SIDE VIEW</div>
+            <div class="canvas-hint">Animation · not to scale</div>
+          </div>
+          <div class="control-grid">
+            <div class="control">
+              <label for="param1"><span id="label1">Initial speed</span><output id="value1">20 m/s</output></label>
+              <input id="param1" type="range" min="5" max="35" value="20" step="1">
+            </div>
+            <div class="control">
+              <label for="param2"><span id="label2">Launch angle</span><output id="value2">45°</output></label>
+              <input id="param2" type="range" min="10" max="80" value="45" step="1">
+            </div>
+            <div class="control">
+              <label for="param3"><span id="label3">Gravity</span><output id="value3">9.8 m/s²</output></label>
+              <input id="param3" type="range" min="2" max="20" value="9.8" step="0.1">
+            </div>
+            <div class="control">
+              <label for="experimentSelect"><span>Experiment</span></label>
+              <select id="experimentSelect">
+                <option value="projectile">Projectile motion</option>
+                <option value="pendulum">Simple pendulum</option>
+                <option value="spring">Mass-spring oscillator</option>
+                <option value="wave">Wave interference</option>
+                <option value="circuit">Ohm's law circuit</option>
+                <option value="lens">Convex lens</option>
+                <option value="energy">Energy conservation</option>
+                <option value="magnet">Magnetic field</option>
+                <option value="collision">Elastic collision</option>
+                <option value="centripetal">Circular motion</option>
+              </select>
+            </div>
+          </div>
+          <div class="readouts">
+            <div class="readout"><small id="metric1">MAX HEIGHT</small><strong id="out1">10.2 m</strong></div>
+            <div class="readout"><small id="metric2">RANGE</small><strong id="out2">40.8 m</strong></div>
+            <div class="readout"><small id="metric3">FLIGHT TIME</small><strong id="out3">2.88 s</strong></div>
+          </div>
+          <div style="display:flex;gap:9px;margin-top:13px;flex-wrap:wrap">
+            <button class="btn-secondary btn-sm" id="physReset">↺ Reset experiment</button>
+          </div>
+        </div>
+      </section>
+
+      <aside class="right-stack">
+        <section class="panel">
+          <div class="panel-head"><h2>Experiment library</h2><span>10 MODULES</span></div>
+          <div class="experiment-list" id="experimentList">
+            <button class="exp active" data-exp="projectile"><span class="exp-icon">↗</span><span><b>Projectile motion</b><small>Range, height &amp; time</small></span></button>
+            <button class="exp" data-exp="pendulum"><span class="exp-icon">◉</span><span><b>Simple pendulum</b><small>Period &amp; length</small></span></button>
+            <button class="exp" data-exp="spring"><span class="exp-icon">〰</span><span><b>Mass-spring system</b><small>SHM &amp; Hooke's law</small></span></button>
+            <button class="exp" data-exp="wave"><span class="exp-icon">∿</span><span><b>Wave interference</b><small>Amplitude &amp; frequency</small></span></button>
+            <button class="exp" data-exp="circuit"><span class="exp-icon">ϟ</span><span><b>Ohm's law</b><small>Voltage, current, resistance</small></span></button>
+            <button class="exp" data-exp="lens"><span class="exp-icon">◐</span><span><b>Convex lens</b><small>Image formation</small></span></button>
+            <button class="exp" data-exp="energy"><span class="exp-icon">♧</span><span><b>Energy conservation</b><small>Potential ↔ kinetic</small></span></button>
+            <button class="exp" data-exp="magnet"><span class="exp-icon">⊙</span><span><b>Magnetic field</b><small>Field-line visualizer</small></span></button>
+            <button class="exp" data-exp="collision"><span class="exp-icon">●</span><span><b>Elastic collision</b><small>Momentum transfer</small></span></button>
+            <button class="exp" data-exp="centripetal"><span class="exp-icon">⟳</span><span><b>Circular motion</b><small>Angular speed &amp; force</small></span></button>
+          </div>
+        </section>
+
+        <section class="panel">
+          <div class="panel-head"><h2>Concept &amp; formula</h2><span>QUICK GUIDE</span></div>
+          <div class="info">
+            <h3 id="conceptTitle">Projectile motion</h3>
+            <p id="conceptText">A launched object follows a curved path when gravity is the only acceleration. Horizontal velocity stays constant in this ideal model.</p>
+            <div class="formula" id="formula">H = u² sin²θ / 2g</div>
+            <ul id="conceptList">
+              <li>Horizontal and vertical motion are independent.</li>
+              <li>Air resistance is ignored.</li>
+              <li>At the highest point, vertical velocity is zero.</li>
+            </ul>
+          </div>
+        </section>
+
+        <section class="panel">
+          <div class="panel-head"><h2>Quick check</h2><span>TEST YOURSELF</span></div>
+          <div class="quiz">
+            <p class="q" id="quizQuestion">At the highest point of a projectile, what is its vertical velocity?</p>
+            <div id="quizOptions">
+              <label class="opt"><input type="radio" name="pquiz" value="0"> Equal to initial velocity</label>
+              <label class="opt"><input type="radio" name="pquiz" value="1"> Zero</label>
+              <label class="opt"><input type="radio" name="pquiz" value="2"> Increasing</label>
+            </div>
+            <button class="btn-primary btn-sm" id="checkQuiz">Check answer</button>
+            <div class="feedback" id="quizFeedback" aria-live="polite"></div>
+          </div>
+        </section>
+      </aside>
+    </div>
+  </div>
+</section>
+
+<!-- ================= CHEMISTRY ================= -->
+<section class="view" id="view-chemistry">
+  <div class="wrap">
+    <div class="page-head">
+      <div class="eyebrow">A/L Chemistry · Structures, Bonding &amp; Calculations</div>
+      <h2>Chemistry 3D Lab</h2>
+      <p>අණු සහ අයන සොයන්න, schematic 3D model කරකවලා බලන්න, VSEPR හැඩයන් හඳුනාගන්න, ගණනය කිරීම් කරන්න සහ quiz එකෙන් පුහුණු වෙන්න.</p>
+    </div>
+
+    <div class="notice">⚠️ <b>අධ්‍යයන සටහන:</b> 3D දර්ශනය පරමාණු-බන්ධන සංකල්ප පැහැදිලි කරන schematic model එකකි. නිශ්චිත quantum/measured geometry සහ සියලුම විෂය නිර්දේශ කරුණු සඳහා ඔබේ නිල syllabus සහ ගුරු සටහන් සමඟ සසඳන්න.</div>
+
+    <section class="library">
+      <article class="panel">
+        <div class="panel-body">
+          <div class="controls" style="display:flex;gap:9px;flex-wrap:wrap">
+            <input id="search" type="text" placeholder="Search: water, NH3, sulfate…" aria-label="Search molecule library" style="flex:1;min-width:130px">
+            <select id="filter" aria-label="Filter species" style="width:auto">
+              <option value="all">සියල්ල</option>
+              <option value="Molecule">Molecules</option>
+              <option value="Ion">Ions</option>
+              <option value="Organic">Organic</option>
+            </select>
+          </div>
+          <p class="muted" id="count" style="margin-top:10px">100 / 100 species</p>
+          <div class="species-list" id="speciesList"></div>
+        </div>
+      </article>
+
+      <article class="panel">
+        <div class="panel-body">
+          <div style="display:flex;justify-content:space-between;align-items:center;gap:10px;margin-bottom:10px">
+            <span class="pill" id="category">Molecule</span>
+            <button class="btn-secondary btn-sm" id="resetView">Reset view ↺</button>
+          </div>
+          <h2 id="speciesName" style="font-size:20px;letter-spacing:-.02em">Water</h2>
+          <div class="formula-big" id="speciesFormula">H₂O</div>
+          <div class="mol-wrap"><canvas id="moleculeCanvas" aria-label="Interactive schematic molecular model"></canvas></div>
+          <div class="atom-legend">
+            <span><i class="adot" style="background:#e85d5d"></i>O</span>
+            <span><i class="adot" style="background:#f4f4f4;border:1px solid #999"></i>H</span>
+            <span><i class="adot" style="background:#4d83dc"></i>N</span>
+            <span><i class="adot" style="background:#777"></i>C</span>
+            <span><i class="adot" style="background:#edbd45"></i>S</span>
+            <span><i class="adot" style="background:#4cae88"></i>Other</span>
+          </div>
+          <div class="stats">
+            <div class="stat"><small>Geometry</small><b id="geometry">Bent</b></div>
+            <div class="stat"><small>Bond angle (approx.)</small><b id="angle">104.5°</b></div>
+            <div class="stat"><small>Central atom / type</small><b id="central">O</b></div>
+            <div class="stat"><small>Electron domains</small><b id="domains">4</b></div>
+          </div>
+          <div class="detailbox" id="explanation"></div>
+          <div class="detailbox"><b>Lewis / bonding note</b><div id="lewis"></div></div>
+          <div class="detailbox"><b>Exam reminder</b><div id="examNote"></div></div>
+        </div>
+      </article>
+    </section>
+
+    <div class="page-head"><h2 style="font-size:22px">🧮 Chemistry Calculators</h2></div>
+    <section class="calc-grid">
+      <div class="calc-card">
+        <h4>Mole Calculator</h4>
+        <div class="hint">n = m / M</div>
+        <div class="field-row">
+          <div class="field"><label for="mass">Mass (g)</label><input id="mass" type="number" min="0" step="any" value="18"></div>
+          <div class="field"><label for="molar">Molar mass (g mol⁻¹)</label><input id="molar" type="number" min="0.000001" step="any" value="18.015"></div>
+        </div>
+        <button class="btn-primary btn-sm" id="btnMole">Calculate moles</button>
+        <div class="calc-out" id="moleOut">n = m / M</div>
+      </div>
+      <div class="calc-card">
+        <h4>Concentration Calculator</h4>
+        <div class="hint">c = n / V (V in dm³)</div>
+        <div class="field-row">
+          <div class="field"><label for="mol">Amount (mol)</label><input id="mol" type="number" min="0" step="any" value="0.1"></div>
+          <div class="field"><label for="vol">Volume (cm³)</label><input id="vol" type="number" min="0.0001" step="any" value="250"></div>
+        </div>
+        <button class="btn-primary btn-sm" id="btnConc">Calculate concentration</button>
+        <div class="calc-out" id="concOut">c = n / V</div>
+      </div>
+      <div class="calc-card">
+        <h4>pH Calculator</h4>
+        <div class="hint">pH = −log₁₀[H⁺] (dilute aqueous approximation)</div>
+        <div class="field"><label for="hconc">[H⁺] mol dm⁻³</label><input id="hconc" type="number" min="0.000000000001" step="any" value="0.001"></div>
+        <button class="btn-primary btn-sm" id="btnPh">Calculate pH</button>
+        <div class="calc-out" id="phOut">pH = −log₁₀[H⁺]</div>
+      </div>
+    </section>
+
+    <div class="grid-2" style="margin-top:18px">
+      <div class="panel">
+        <div class="panel-head"><h2>📘 VSEPR shapes</h2><span>QUICK NOTES</span></div>
+        <div class="panel-body">
+          <p class="muted">AX₂ — Linear, 180°</p>
+          <p class="muted">AX₃ — Trigonal planar, 120°</p>
+          <p class="muted">AX₄ — Tetrahedral, 109.5°</p>
+          <p class="muted">AX₃E — Trigonal pyramidal, ~107° (NH₃)</p>
+          <p class="muted">AX₂E₂ — Bent, ~104.5° (H₂O)</p>
+          <p class="muted" style="margin-top:10px">Electron-pair repulsion order: LP–LP &gt; LP–BP &gt; BP–BP.</p>
+        </div>
+      </div>
+      <div class="panel">
+        <div class="panel-head"><h2>📝 Chemistry quick quiz</h2><span>TEST YOURSELF</span></div>
+        <div class="quiz">
+          <p class="q" id="qText">Loading quiz…</p>
+          <div id="qOptions"></div>
+          <div class="feedback" id="qFeedback" aria-live="polite"></div>
+          <div style="display:flex;gap:9px;align-items:center;margin-top:10px;flex-wrap:wrap">
+            <button class="btn-primary btn-sm" id="nextQ">Next question →</button>
+            <span class="pill" id="score">Score: 0</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= MATHS ================= -->
+<section class="view" id="view-math">
+  <div class="wrap">
+    <div class="page-head">
+      <div class="eyebrow">A/L Combined Maths · Formulas &amp; Calculators</div>
+      <h2>Mathematics Hub</h2>
+      <p>සියලුම ප්‍රධාන formulas එකම තැනක, search කළ හැකි ආකාරයෙන්. ඊට අමතරව interactive calculators 7ක් සහ quiz එකක්.</p>
+    </div>
+
+    <div class="panel" style="margin-bottom:18px">
+      <div class="panel-body" style="padding:14px">
+        <input id="formulaSearch" type="text" placeholder="🔍 Search formulas… (quadratic, sine rule, derivative, sphere, variance…)" aria-label="Search formulas">
+      </div>
+    </div>
+
+    <div class="formula-grid" id="formulaGrid">
+      <div class="fcard"><h4>∑ Algebra</h4>
+        <div class="frow"><span>Quadratic formula</span><code>x = (−b ± √(b²−4ac)) / 2a</code></div>
+        <div class="frow"><span>Square of sum</span><code>(a+b)² = a² + 2ab + b²</code></div>
+        <div class="frow"><span>Square of difference</span><code>(a−b)² = a² − 2ab + b²</code></div>
+        <div class="frow"><span>Difference of squares</span><code>a² − b² = (a+b)(a−b)</code></div>
+        <div class="frow"><span>Indices — product</span><code>aᵐ × aⁿ = aᵐ⁺ⁿ</code></div>
+        <div class="frow"><span>Indices — quotient</span><code>aᵐ ÷ aⁿ = aᵐ⁻ⁿ</code></div>
+        <div class="frow"><span>Indices — power</span><code>(aᵐ)ⁿ = aᵐⁿ</code></div>
+        <div class="frow"><span>Negative index</span><code>a⁻ⁿ = 1/aⁿ</code></div>
+      </div>
+
+      <div class="fcard"><h4>📐 Logarithms</h4>
+        <div class="frow"><span>Product rule</span><code>log(ab) = log a + log b</code></div>
+        <div class="frow"><span>Quotient rule</span><code>log(a/b) = log a − log b</code></div>
+        <div class="frow"><span>Power rule</span><code>log(aⁿ) = n log a</code></div>
+        <div class="frow"><span>Change of base</span><code>log_b a = ln a / ln b</code></div>
+        <div class="frow"><span>Base identity</span><code>log_b b = 1</code></div>
+        <div class="frow"><span>Unity</span><code>log_b 1 = 0</code></div>
+        <div class="frow"><span>Inverse</span><code>b^(log_b x) = x</code></div>
+      </div>
+
+      <div class="fcard"><h4>📊 Trigonometry</h4>
+        <div class="frow"><span>Pythagorean identity</span><code>sin²θ + cos²θ = 1</code></div>
+        <div class="frow"><span>Tangent</span><code>tan θ = sin θ / cos θ</code></div>
+        <div class="frow"><span>Double angle (sin)</span><code>sin 2A = 2 sin A cos A</code></div>
+        <div class="frow"><span>Double angle (cos)</span><code>cos 2A = cos²A − sin²A</code></div>
+        <div class="frow"><span>Sine rule</span><code>a/sin A = b/sin B = c/sin C</code></div>
+        <div class="frow"><span>Cosine rule</span><code>a² = b² + c² − 2bc cos A</code></div>
+        <div class="frow"><span>Triangle area</span><code>A = ½ab sin C</code></div>
+      </div>
+
+      <div class="fcard"><h4>🧭 Coordinate geometry</h4>
+        <div class="frow"><span>Distance</span><code>√((x₂−x₁)² + (y₂−y₁)²)</code></div>
+        <div class="frow"><span>Midpoint</span><code>((x₁+x₂)/2 , (y₁+y₂)/2)</code></div>
+        <div class="frow"><span>Gradient</span><code>m = (y₂−y₁)/(x₂−x₁)</code></div>
+        <div class="frow"><span>Point-slope form</span><code>y − y₁ = m(x − x₁)</code></div>
+        <div class="frow"><span>Perpendicular lines</span><code>m₁ × m₂ = −1</code></div>
+        <div class="frow"><span>Circle (centre form)</span><code>(x−h)² + (y−k)² = r²</code></div>
+      </div>
+
+      <div class="fcard"><h4>∫ Calculus</h4>
+        <div class="frow"><span>Power rule</span><code>d/dx (xⁿ) = n xⁿ⁻¹</code></div>
+        <div class="frow"><span>Sine</span><code>d/dx (sin x) = cos x</code></div>
+        <div class="frow"><span>Cosine</span><code>d/dx (cos x) = −sin x</code></div>
+        <div class="frow"><span>Tangent</span><code>d/dx (tan x) = sec² x</code></div>
+        <div class="frow"><span>Exponential</span><code>d/dx (eˣ) = eˣ</code></div>
+        <div class="frow"><span>Natural log</span><code>d/dx (ln x) = 1/x</code></div>
+        <div class="frow"><span>Integral of xⁿ</span><code>∫xⁿ dx = xⁿ⁺¹/(n+1) + c</code></div>
+        <div class="frow"><span>Chain rule</span><code>dy/dx = dy/du × du/dx</code></div>
+        <div class="frow"><span>Product rule</span><code>(uv)′ = u′v + uv′</code></div>
+        <div class="frow"><span>Quotient rule</span><code>(u/v)′ = (u′v − uv′)/v²</code></div>
+      </div>
+
+      <div class="fcard"><h4>⭕ Geometry &amp; mensuration</h4>
+        <div class="frow"><span>Circle area</span><code>A = πr²</code></div>
+        <div class="frow"><span>Circumference</span><code>C = 2πr</code></div>
+        <div class="frow"><span>Sphere volume</span><code>V = 4/3 πr³</code></div>
+        <div class="frow"><span>Sphere surface</span><code>SA = 4πr²</code></div>
+        <div class="frow"><span>Cylinder volume</span><code>V = πr²h</code></div>
+        <div class="frow"><span>Cylinder curved surface</span><code>CSA = 2πrh</code></div>
+        <div class="frow"><span>Cone volume</span><code>V = ⅓πr²h</code></div>
+        <div class="frow"><span>Cone slant height</span><code>l = √(r² + h²)</code></div>
+        <div class="frow"><span>Triangle (Heron)</span><code>A = √(s(s−a)(s−b)(s−c))</code></div>
+        <div class="frow"><span>Trapezium</span><code>A = ½(a+b)h</code></div>
+      </div>
+
+      <div class="fcard"><h4>📈 Statistics</h4>
+        <div class="frow"><span>Mean</span><code>x̄ = Σx / n</code></div>
+        <div class="frow"><span>Population variance</span><code>σ² = Σ(x−x̄)² / n</code></div>
+        <div class="frow"><span>Sample variance</span><code>s² = Σ(x−x̄)² / (n−1)</code></div>
+        <div class="frow"><span>Standard deviation</span><code>σ = √variance</code></div>
+        <div class="frow"><span>Median</span><code>middle value of sorted data</code></div>
+        <div class="frow"><span>Mode</span><code>most frequent value</code></div>
+      </div>
+
+      <div class="fcard"><h4>🔢 Sequences &amp; series</h4>
+        <div class="frow"><span>AP — nth term</span><code>Tₙ = a + (n−1)d</code></div>
+        <div class="frow"><span>AP — sum</span><code>Sₙ = n/2 [2a + (n−1)d]</code></div>
+        <div class="frow"><span>GP — nth term</span><code>Tₙ = a rⁿ⁻¹</code></div>
+        <div class="frow"><span>GP — sum</span><code>Sₙ = a(rⁿ−1)/(r−1)</code></div>
+        <div class="frow"><span>GP — infinite sum</span><code>S∞ = a/(1−r) , |r| &lt; 1</code></div>
+      </div>
+
+      <div class="fcard"><h4>💰 Financial maths</h4>
+        <div class="frow"><span>Simple interest</span><code>I = PRT / 100</code></div>
+        <div class="frow"><span>Compound amount</span><code>A = P(1 + r/100)ⁿ</code></div>
+        <div class="frow"><span>Depreciation</span><code>A = P(1 − r/100)ⁿ</code></div>
+        <div class="frow"><span>Percentage change</span><code>((new − old)/old) × 100%</code></div>
+      </div>
+
+      <div class="fcard"><h4>⚛️ Physics formulas</h4>
+        <div class="frow"><span>First equation of motion</span><code>v = u + at</code></div>
+        <div class="frow"><span>Second equation</span><code>s = ut + ½at²</code></div>
+        <div class="frow"><span>Third equation</span><code>v² = u² + 2as</code></div>
+        <div class="frow"><span>Newton's second law</span><code>F = ma</code></div>
+        <div class="frow"><span>Kinetic energy</span><code>KE = ½mv²</code></div>
+        <div class="frow"><span>Potential energy</span><code>PE = mgh</code></div>
+        <div class="frow"><span>Ohm's law</span><code>V = IR</code></div>
+        <div class="frow"><span>Electrical power</span><code>P = VI = I²R</code></div>
+        <div class="frow"><span>Wave equation</span><code>v = fλ</code></div>
+        <div class="frow"><span>Period &amp; frequency</span><code>T = 1/f</code></div>
+      </div>
+    </div>
+
+    <div class="page-head"><h2 style="font-size:22px">🧮 Interactive Calculators</h2></div>
+
+    <div class="calc-grid">
+      <div class="calc-card">
+        <h4>Quadratic Equation Solver</h4>
+        <div class="hint">ax² + bx + c = 0</div>
+        <div class="field-row">
+          <div class="field"><label for="qa">a</label><input id="qa" type="number" step="any" value="1"></div>
+          <div class="field"><label for="qb">b</label><input id="qb" type="number" step="any" value="-3"></div>
+        </div>
+        <div class="field"><label for="qc">c</label><input id="qc" type="number" step="any" value="2"></div>
+        <button class="btn-primary btn-sm" id="btnQuad">Solve</button>
+        <div class="calc-out" id="quadOut">Enter coefficients and press Solve.</div>
+      </div>
+
+      <div class="calc-card">
+        <h4>Triangle Solver</h4>
+        <div class="hint">SAS (sides a, b + included angle C) හෝ SSS (sides a, b, c)</div>
+        <div class="field"><label for="triMode">Mode</label>
+          <select id="triMode">
+            <option value="sas">SAS — sides a, b + angle C</option>
+            <option value="sss">SSS — sides a, b, c</option>
+          </select>
+        </div>
+        <div class="field-row">
+          <div class="field"><label for="ta">Side a</label><input id="ta" type="number" step="any" value="7"></div>
+          <div class="field"><label for="tb">Side b</label><input id="tb" type="number" step="any" value="9"></div>
+        </div>
+        <div class="field-row">
+          <div class="field"><label for="tc">Side c (SSS only)</label><input id="tc" type="number" step="any" value="8"></div>
+          <div class="field"><label for="tC">Angle C° (SAS only)</label><input id="tC" type="number" step="any" value="60"></div>
+        </div>
+        <button class="btn-primary btn-sm" id="btnTri">Solve triangle</button>
+        <div class="calc-out" id="triOut">Enter values and press Solve.</div>
+      </div>
+
+      <div class="calc-card">
+        <h4>Shape Area &amp; Volume</h4>
+        <div class="hint">Sphere / cylinder / cone / circle</div>
+        <div class="field"><label for="shapeSel">Shape</label>
+          <select id="shapeSel">
+            <option value="sphere">Sphere</option>
+            <option value="cylinder">Cylinder</option>
+            <option value="cone">Cone</option>
+            <option value="circle">Circle</option>
+          </select>
+        </div>
+        <div class="field-row">
+          <div class="field"><label for="shapeR">Radius r</label><input id="shapeR" type="number" step="any" value="5"></div>
+          <div class="field"><label for="shapeH">Height h</label><input id="shapeH" type="number" step="any" value="10"></div>
+        </div>
+        <button class="btn-primary btn-sm" id="btnShape">Calculate</button>
+        <div class="calc-out" id="shapeOut">Enter values and press Calculate.</div>
+      </div>
+
+      <div class="calc-card">
+        <h4>Statistics Calculator</h4>
+        <div class="hint">Numbers comma හෝ space වලින් වෙන් කරන්න</div>
+        <div class="field"><label for="statIn">Data set</label>
+          <textarea id="statIn" rows="3" style="resize:vertical">4, 8, 15, 16, 23, 42</textarea>
+        </div>
+        <button class="btn-primary btn-sm" id="btnStat">Calculate statistics</button>
+        <div class="calc-out" id="statOut">Enter data and press Calculate.</div>
+      </div>
+
+      <div class="calc-card">
+        <h4>Interest Calculator</h4>
+        <div class="hint">Compound / simple interest</div>
+        <div class="field-row">
+          <div class="field"><label for="ciP">Principal P</label><input id="ciP" type="number" step="any" value="100000"></div>
+          <div class="field"><label for="ciR">Rate r %</label><input id="ciR" type="number" step="any" value="8"></div>
+        </div>
+        <div class="field-row">
+          <div class="field"><label for="ciT">Years t</label><input id="ciT" type="number" step="any" value="5"></div>
+          <div class="field"><label for="ciN">Compounds / year n</label><input id="ciN" type="number" step="1" value="1"></div>
+        </div>
+        <button class="btn-primary btn-sm" id="btnCi">Calculate interest</button>
+        <div class="calc-out" id="ciOut">Enter values and press Calculate.</div>
+      </div>
+
+      <div class="calc-card">
+        <h4>Sequences Calculator</h4>
+        <div class="hint">Arithmetic (AP) හෝ geometric (GP)</div>
+        <div class="field"><label for="seqType">Type</label>
+          <select id="seqType">
+            <option value="ap">Arithmetic — common difference d</option>
+            <option value="gp">Geometric — common ratio r</option>
+          </select>
+        </div>
+        <div class="field-row">
+          <div class="field"><label for="seqA">First term a</label><input id="seqA" type="number" step="any" value="2"></div>
+          <div class="field"><label for="seqD">d or r</label><input id="seqD" type="number" step="any" value="3"></div>
+        </div>
+        <div class="field"><label for="seqN">Number of terms n</label><input id="seqN" type="number" step="1" value="10"></div>
+        <button class="btn-primary btn-sm" id="btnSeq">Calculate sequence</button>
+        <div class="calc-out" id="seqOut">Enter values and press Calculate.</div>
+      </div>
+
+      <div class="calc-card">
+        <h4>Logarithm Calculator</h4>
+        <div class="hint">log base b, natural log සහ log₁₀</div>
+        <div class="field-row">
+          <div class="field"><label for="logX">Value x</label><input id="logX" type="number" step="any" value="100"></div>
+          <div class="field"><label for="logB">Base b</label><input id="logB" type="number" step="any" value="10"></div>
+        </div>
+        <button class="btn-primary btn-sm" id="btnLog">Calculate logarithms</button>
+        <div class="calc-out" id="logOut">Enter values and press Calculate.</div>
+      </div>
+    </div>
+
+    <div class="panel" style="margin-top:18px">
+      <div class="panel-head"><h2>📝 Maths quick quiz</h2><span>TEST YOURSELF</span></div>
+      <div class="quiz">
+        <p class="q" id="mQText">Loading…</p>
+        <div id="mQOptions"></div>
+        <div class="feedback" id="mQFeedback" aria-live="polite"></div>
+        <div style="display:flex;gap:9px;align-items:center;margin-top:10px;flex-wrap:wrap">
+          <button class="btn-primary btn-sm" id="mNextQ">Next question →</button>
+          <span class="pill" id="mScore">Score: 0</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= AI TUTOR ================= -->
+<section class="view" id="view-ai">
+  <div class="wrap">
+    <div class="page-head">
+      <div class="eyebrow">Ask Anything · Powered by the world's best AI models</div>
+      <h2>🤖 AI Tutor</h2>
+      <p>ඔබේ ප්‍රශ්නය type කරන්න, පසුව ලෝකයේ හොඳම AI model එකක් තෝරන්න — එය ඔබේ ප්‍රශ්නය සමඟ කෙලින්ම විවෘත වේ. සරල Sinhala + English technical terms වලින් පිළිතුරු දෙන ලෙස prompt එක සකසා ඇත.</p>
+    </div>
+
+    <div class="ai-shell">
+      <div class="ai-box">
+        <h3>Your question</h3>
+        <div class="chip-row" id="subjectChips">
+          <button class="chip active" data-subj="Physics">⚛️ Physics</button>
+          <button class="chip" data-subj="Chemistry">🧪 Chemistry</button>
+          <button class="chip" data-subj="Mathematics">∑ Mathematics</button>
+          <button class="chip" data-subj="General science">🔬 General</button>
+        </div>
+        <textarea id="aiQuestion" placeholder="උදා: Why does a projectile reach maximum range at 45°? / Explain VSEPR theory for NH₃. / Solve ∫x·eˣ dx."></textarea>
+
+        <div class="provider-grid">
+          <button class="provider" data-p="chatgpt"><span class="pdot">🟢</span>ChatGPT</button>
+          <button class="provider" data-p="claude"><span class="pdot">🟠</span>Claude</button>
+          <button class="provider" data-p="gemini"><span class="pdot">🔵</span>Gemini</button>
+          <button class="provider" data-p="perplexity"><span class="pdot">🟦</span>Perplexity</button>
+          <button class="provider" data-p="copilot"><span class="pdot">🟣</span>Copilot</button>
+          <button class="provider" data-p="grok"><span class="pdot">⚫</span>Grok</button>
+          <button class="provider" data-p="deepseek"><span class="pdot">🔷</span>DeepSeek</button>
+        </div>
+
+        <div style="display:flex;gap:9px;flex-wrap:wrap;margin-top:12px">
+          <button class="btn-secondary btn-sm" id="aiCopy">📋 Copy question</button>
+          <button class="btn-ghost btn-sm" id="aiClear">✕ Clear</button>
+        </div>
+
+        <div class="quick-answer" id="quickAnswer">💡 ඔබ type කරන ප්‍රශ්නයට ගැලපෙන offline quick answer එකක් තිබේ නම් මෙතැන පෙන්වයි. සම්පූර්ණ පිළිතුරක් සඳහා ඉහත AI provider එකක් තෝරන්න.</div>
+      </div>
+
+      <aside class="ai-side">
+        <div class="panel">
+          <div class="panel-head"><h2>Sample questions</h2><span>TAP TO USE</span></div>
+          <div class="panel-body" id="sampleList">
+            <button class="sample-q" data-q="Why does a projectile have maximum range at 45°? Derive the range formula.">Why does a projectile have maximum range at 45°?</button>
+            <button class="sample-q" data-q="Explain the difference between elastic and inelastic collisions with examples.">Difference between elastic and inelastic collisions</button>
+            <button class="sample-q" data-q="Explain VSEPR theory and predict the shape of NH₃, H₂O and CH₄.">VSEPR: predict shapes of NH₃, H₂O, CH₄</button>
+            <button class="sample-q" data-q="How do I calculate the pH of a weak acid solution? Show a worked example.">Calculate pH of a weak acid with an example</button>
+            <button class="sample-q" data-q="Prove that d/dx(sin x) = cos x using first principles.">Prove d/dx(sin x) = cos x from first principles</button>
+            <button class="sample-q" data-q="Find the sum to infinity of a geometric series and explain when it converges.">Sum to infinity of a geometric series</button>
+          </div>
+        </div>
+        <div class="panel">
+          <div class="panel-head"><h2>How it works</h2><span>NOTE</span></div>
+          <div class="panel-body">
+            <p class="muted">මෙය static web page එකක් නිසා AI model එකක් කෙලින්ම embed කර නැත. ඒ වෙනුවට ඔබේ ප්‍රශ්නය සකස් කර, තෝරාගත් AI service එකේ chat එකට යවයි. එය නොමිලේ භාවිත කළ හැක. ඔබට API key එකක් තිබේ නම් පසුව backend එකක් හරහා සෘජු integration එකක් කළ හැක.</p>
+            <p class="muted" style="margin-top:9px">Gemini සහ DeepSeek සඳහා prompt එක copy වේ — paste කරලා යවන්න.</p>
+          </div>
+        </div>
+      </aside>
+    </div>
+  </div>
+</section>
+
+<footer class="footer">
+  <div><strong>SASIRU SCIENCE LAB</strong> — Physics · Chemistry · Mathematics · AI Tutor</div>
+  <div class="fline">Designed for learning by <b>Sasiru Neksha Bandara</b> · Educational prototype — verify exam answers against the official syllabus and your teacher's notes.</div>
+</footer>
+
+<div class="toast" id="toast"></div>
+
+<script>
+/* =========================================================
+   SHARED HELPERS
+   ========================================================= */
+function $(id){ return document.getElementById(id); }
+function showToast(msg){
+  const t=$('toast'); t.textContent=msg; t.classList.add('show');
+  clearTimeout(t._tid); t._tid=setTimeout(()=>t.classList.remove('show'),2200);
+}
+function showView(name){
+  document.querySelectorAll('.view').forEach(v=>v.classList.toggle('active', v.id==='view-'+name));
+  document.querySelectorAll('.tab').forEach(t=>t.classList.toggle('active', t.dataset.view===name));
+  if(name==='physics' && window.PhysicsLab) PhysicsLab.refresh();
+  if(name==='chemistry' && window.ChemLab) ChemLab.refresh();
+  window.scrollTo({top:0, behavior:'smooth'});
+}
+document.querySelectorAll('.tab').forEach(t=>t.addEventListener('click',()=>showView(t.dataset.view)));
+
+/* Progress storage */
+function readProg(){
+  try{ return JSON.parse(localStorage.getItem('ssl_progress')||'{"phys":0,"chem":0,"math":0}'); }
+  catch(e){ return {phys:0,chem:0,math:0}; }
+}
+function writeProg(key,val){
+  const p=readProg();
+  if(val>p[key]){ p[key]=val; try{localStorage.setItem('ssl_progress',JSON.stringify(p));}catch(e){} }
+  refreshProgress();
+}
+function refreshProgress(){
+  const p=readProg();
+  if($('progPhys')) $('progPhys').textContent = p.phys+' / 1';
+  if($('progChem')) $('progChem').textContent = p.chem+' / 1';
+  if($('progMath')) $('progMath').textContent = p.math+' / 1';
+}
+refreshProgress();
+
+/* =========================================================
+   PHYSICS LAB
+   ========================================================= */
+const PhysicsLab = (function(){
+  const canvas = $('scene'), ctx = canvas.getContext('2d');
+  let current='projectile', anim=0, last=0, running=true;
+
+  const configs = {
+    projectile:{title:'Projectile Motion',labels:['Initial speed','Launch angle','Gravity'],units:[' m/s','°',' m/s²'],defaults:[20,45,9.8],mins:[5,10,2],maxs:[35,80,20],steps:[1,1,.1],metrics:['MAX HEIGHT','RANGE','FLIGHT TIME'],concept:'A launched object follows a curved path when gravity is the only acceleration. Horizontal velocity stays constant in this ideal model.',formula:'H = u² sin²θ / 2g   ·   R = u² sin 2θ / g',points:['Horizontal and vertical motion are independent.','Air resistance is ignored.','At the highest point, vertical velocity is zero.'],quiz:'At the highest point of a projectile, what is its vertical velocity?',opts:['Equal to initial velocity','Zero','Increasing'],correct:1},
+    pendulum:{title:'Simple Pendulum',labels:['Length','Initial angle','Gravity'],units:[' m','°',' m/s²'],defaults:[1,30,9.8],mins:[.2,5,2],maxs:[2.5,70,20],steps:[.1,1,.1],metrics:['TIME PERIOD','FREQUENCY','LENGTH'],concept:'For small oscillations, the period depends on pendulum length and gravitational acceleration, not on the bob mass.',formula:'T = 2π √(L/g)',points:['Use small angles for the simple formula.','Longer pendulum → longer period.','Frequency is the reciprocal of period.'],quiz:'If the pendulum length becomes four times larger, its period becomes…',opts:['Twice as large','Four times larger','Half as large'],correct:0},
+    spring:{title:'Mass–Spring Oscillator',labels:['Mass','Spring constant','Amplitude'],units:[' kg',' N/m',' m'],defaults:[1,12,.25],mins:[.2,2,.05],maxs:[4,40,.5],steps:[.1,1,.01],metrics:['PERIOD','FREQUENCY','MAX SPEED'],concept:'A mass attached to a spring performs simple harmonic motion when the spring obeys Hooke’s law.',formula:'T = 2π √(m/k)',points:['Restoring force points toward equilibrium.','Ideal period is independent of amplitude.','Energy swaps between kinetic and elastic potential.'],quiz:'In ideal spring SHM, where is speed maximum?',opts:['At an extreme','At equilibrium','Everywhere equal'],correct:1},
+    wave:{title:'Wave Interference',labels:['Frequency','Amplitude','Phase shift'],units:[' Hz',' cm','°'],defaults:[2,1,90],mins:[.5,.2,0],maxs:[5,2,360],steps:[.1,.1,5],metrics:['WAVELENGTH*','AMPLITUDE','PHASE'],concept:'When waves overlap, their displacements add. This superposition creates constructive or destructive interference.',formula:'y = y₁ + y₂',points:['In phase waves can reinforce.','Opposite phase waves can cancel.','*Wavelength shown for a fixed model wave speed.'],quiz:'Two equal waves 180° out of phase produce…',opts:['Maximum reinforcement','Complete cancellation','Double frequency'],correct:1},
+    circuit:{title:"Ohm's Law Circuit",labels:['Voltage','Resistance','Wire length'],units:[' V',' Ω',' m'],defaults:[12,6,1],mins:[1,24,0.5],maxs:[24,24,5],steps:[1,1,.5],metrics:['CURRENT','POWER','VOLTAGE'],concept:'For an ohmic resistor at constant temperature, current is proportional to potential difference.',formula:'V = IR  ·  P = VI',points:['Current is measured in amperes.','Resistance is measured in ohms.','Real components may heat and deviate from the ideal model.'],quiz:'A 12 V supply across 6 Ω gives current of…',opts:['0.5 A','2 A','72 A'],correct:1},
+    lens:{title:'Convex Lens',labels:['Object distance','Focal length','Object height'],units:[' cm',' cm',' cm'],defaults:[30,10,4],mins:[12,5,1],maxs:[60,20,8],steps:[1,1,1],metrics:['IMAGE DIST.','MAGNIFICATION','IMAGE TYPE'],concept:'A converging lens forms real or virtual images depending on object distance relative to focal length.',formula:'1/f = 1/u + 1/v',points:['Beyond 2f: real, inverted, reduced.','At 2f: same size, real and inverted.','Inside f: virtual, upright, magnified.'],quiz:'An object placed inside the focal length gives a…',opts:['Real inverted image','Virtual upright image','No image at all'],correct:1},
+    energy:{title:'Energy Conservation',labels:['Mass','Height','Gravity'],units:[' kg',' m',' m/s²'],defaults:[2,5,9.8],mins:[.5,1,2],maxs:[5,10,20],steps:[.5,.5,.1],metrics:['POTENTIAL E.','SPEED AT GROUND','TOTAL ENERGY'],concept:'In an ideal system without energy losses, gravitational potential energy transforms into kinetic energy.',formula:'mgh = ½mv²',points:['Energy is measured in joules.','Speed at ground: v = √(2gh).','Friction transfers mechanical energy to thermal energy.'],quiz:'Ignoring losses, total mechanical energy is…',opts:['Always conserved','Always zero','Created at the bottom'],correct:0},
+    magnet:{title:'Magnetic Field',labels:['Current','Coil turns','Radius'],units:[' A',' turns',' cm'],defaults:[2,20,5],mins:[.5,5,2],maxs:[5,50,12],steps:[.1,1,1],metrics:['FIELD INDEX','CURRENT','TURNS'],concept:'A current produces a magnetic field. In an ideal long solenoid, field strength grows with current and turn density.',formula:'B ≈ μ₀ n I',points:['Field lines form closed loops.','Outside a bar magnet, lines run north to south.','This is a qualitative visualization, not a calibrated field meter.'],quiz:'Increasing current in the same coil generally makes its field…',opts:['Weaker','Stronger','Unchanged always'],correct:1},
+    collision:{title:'Elastic Collision',labels:['Mass 1','Velocity 1','Velocity 2'],units:[' kg',' m/s',' m/s'],defaults:[2,4,-1],mins:[.5,-8,-8],maxs:[5,8,8],steps:[.5,1,1],metrics:['FINAL V₁','FINAL V₂','MOMENTUM'],concept:'In a one-dimensional ideal elastic collision, both total momentum and total kinetic energy are conserved.',formula:'m₁u₁ + m₂u₂ = m₁v₁ + m₂v₂',points:['Sign represents direction.','Momentum is a vector quantity.','Real collisions may lose kinetic energy to sound, heat or deformation.'],quiz:'In an ideal elastic collision, which quantities are conserved?',opts:['Momentum only','Kinetic energy only','Both momentum and kinetic energy'],correct:2},
+    centripetal:{title:'Circular Motion',labels:['Speed','Radius','Mass'],units:[' m/s',' m',' kg'],defaults:[5,2,1],mins:[1,12,.5],maxs:[15,12,5],steps:[.5,.5,.5],metrics:['CENTRIPETAL a','CENTRIPETAL F','PERIOD'],concept:'An object moving in a circle has centripetal acceleration directed toward the centre, even at constant speed.',formula:'a = v²/r  ·  F = mv²/r',points:['Acceleration points inward.','Doubling speed quadruples centripetal acceleration.','A larger radius lowers acceleration at fixed speed.'],quiz:'If speed doubles while radius stays fixed, centripetal acceleration…',opts:['Doubles','Quadruples','Halves'],correct:1}
+  };
+
+  function val(i){ return Number($('param'+i).value); }
+
+  function setupControls(){
+    const c = configs[current];
+    c.labels.forEach((label,i)=>{
+      const p = $('param'+(i+1));
+      p.min=c.mins[i]; p.max=c.maxs[i]; p.step=c.steps[i]; p.value=c.defaults[i];
+      $('label'+(i+1)).textContent = label;
+    });
+    $('expTitle').textContent = c.title;
+    $('conceptTitle').textContent = c.title;
+    $('conceptText').textContent = c.concept;
+    $('formula').textContent = c.formula;
+    $('conceptList').innerHTML = c.points.map(x=>'<li>'+x+'</li>').join('');
+    c.metrics.forEach((m,i)=>$('metric'+(i+1)).textContent = m);
+    $('quizQuestion').textContent = c.quiz;
+    $('quizOptions').innerHTML = c.opts.map((o,i)=>
+      `<label class="opt"><input type="radio" name="pquiz" value="${i}"> ${o}</label>`).join('');
+    $('quizFeedback').textContent = '';
+    document.querySelectorAll('#experimentList .exp').forEach(b=>b.classList.toggle('active', b.dataset.exp===current));
+    update();
+  }
+
+  function update(){
+    const c = configs[current];
+    const v = [val(1),val(2),val(3)];
+    v.forEach((x,i)=>$('value'+(i+1)).textContent = Number(x.toFixed(2))+c.units[i]);
+    let outs = [];
+    if(current==='projectile'){
+      const a=v[1]*Math.PI/180, t=2*v[0]*Math.sin(a)/v[2];
+      outs=[(v[0]**2*Math.sin(a)**2/(2*v[2])).toFixed(2)+' m',
+            (v[0]**2*Math.sin(2*a)/v[2]).toFixed(2)+' m',
+            t.toFixed(2)+' s'];
+    }
+    if(current==='pendulum'){ const T=2*Math.PI*Math.sqrt(v[0]/v[2]); outs=[T.toFixed(2)+' s',(1/T).toFixed(2)+' Hz',v[0].toFixed(2)+' m']; }
+    if(current==='spring'){ const T=2*Math.PI*Math.sqrt(v[0]/v[1]); outs=[T.toFixed(2)+' s',(1/T).toFixed(2)+' Hz',(2*Math.PI/T*v[2]).toFixed(2)+' m/s']; }
+    if(current==='wave'){ outs=[(340/v[0]).toFixed(1)+' m',(v[1]*Math.abs(2*Math.cos(v[2]*Math.PI/360))).toFixed(2)+' cm',v[2]+'°']; }
+    if(current==='circuit'){ outs=[(v[0]/v[1]).toFixed(2)+' A',(v[0]**2/v[1]).toFixed(1)+' W',v[0]+' V']; }
+    if(current==='lens'){
+      const img = v[0]===v[1] ? '∞' : (v[1]*v[0]/(v[0]-v[1])).toFixed(1);
+      outs=[img+' cm',(v[0]/(v[0]-v[1])).toFixed(2)+'×', v[0]>v[1]?'Real':'Virtual'];
+    }
+    if(current==='energy'){ outs=[(v[0]*v[1]*v[2]).toFixed(1)+' J', Math.sqrt(2*v[1]*v[2]).toFixed(2)+' m/s',(v[0]*v[1]*v[2]).toFixed(1)+' J']; }
+    if(current==='magnet'){ outs=[(v[0]*v[1]/(v[2]/100)).toFixed(0)+' index', v[0]+' A', v[1]+' turns']; }
+    if(current==='collision'){
+      const m1=v[0], m2=2, u1=v[1], u2=v[2];
+      outs=[((m1-m2)/(m1+m2)*u1 + 2*m2/(m1+m2)*u2).toFixed(2)+' m/s',
+            (2*m1/(m1+m2)*u1 + (m2-m1)/(m1+m2)*u2).toFixed(2)+' m/s',
+            (m1*u1+m2*u2).toFixed(2)+' kg·m/s'];
+    }
+    if(current==='centripetal'){ outs=[(v[0]**2/v[1]).toFixed(2)+' m/s²',(v[2]*v[0]**2/v[1]).toFixed(2)+' N',(2*Math.PI*v[1]/v[0]).toFixed(2)+' s']; }
+    outs.forEach((o,i)=>{ if($('out'+(i+1))) $('out'+(i+1)).textContent = o; });
+  }
+
+  function resize(){
+    const r = canvas.getBoundingClientRect(), d = window.devicePixelRatio || 1;
+    if(!r.width || !r.height) return;
+    canvas.width = Math.max(1, Math.round(r.width*d));
+    canvas.height = Math.max(1, Math.round(r.height*d));
+    ctx.setTransform(d,0,0,d,0,0);
+  }
+
+  function line(x1,y1,x2,y2,color,w){
+    ctx.strokeStyle = color || 'rgba(255,255,255,.05)';
+    ctx.lineWidth = w || 1;
+    ctx.beginPath(); ctx.moveTo(x1,y1); ctx.lineTo(x2,y2); ctx.stroke();
+  }
+  function dot(x,y,r,color){
+    ctx.fillStyle = color;
+    ctx.beginPath(); ctx.arc(x,y,r,0,Math.PI*2); ctx.fill();
+  }
+
+  const C_PRIMARY = '#ff3b5c';
+  const C_PRIMARY_SOFT = 'rgba(255,59,92,.35)';
+  const C_AMBER = '#ffb020';
+  const C_TEXT = '#c9b6bd';
+
+  function draw(){
+    const w = canvas.clientWidth, h = canvas.clientHeight;
+    if(!w || !h) return;
+    ctx.clearRect(0,0,w,h);
+    const g = ctx.createLinearGradient(0,0,w,h);
+    g.addColorStop(0,'#24101a'); g.addColorStop(1,'#08080d');
+    ctx.fillStyle = g; ctx.fillRect(0,0,w,h);
+    for(let x=0;x<w;x+=30) line(x,0,x,h,'rgba(255,255,255,.045)');
+    for(let y=0;y<h;y+=30) line(0,y,w,y,'rgba(255,255,255,.045)');
+
+    const v = [val(1),val(2),val(3)];
+    const cx = w*.5, cy = h*.5;
+
+    if(current==='projectile'){
+      const u=v[0], a=v[1]*Math.PI/180, gg=v[2];
+      const T=2*u*Math.sin(a)/gg, R=u*Math.cos(a)*T, H=u*u*Math.sin(a)**2/(2*gg);
+      const scale=Math.min((w*.78)/Math.max(R,1),(h*.58)/Math.max(H,1));
+      const base=h*.78, ox=w*.1;
+      line(ox,base,w*.92,base,'#6b3b48',2);
+      ctx.strokeStyle=C_PRIMARY; ctx.lineWidth=2.2; ctx.beginPath();
+      for(let i=0;i<=100;i++){
+        const t=T*i/100;
+        const x=ox+u*Math.cos(a)*t*scale;
+        const y=base-(u*Math.sin(a)*t-.5*gg*t*t)*scale;
+        i?ctx.lineTo(x,y):ctx.moveTo(x,y);
+      }
+      ctx.stroke();
+      const t=(anim%4)/4*T;
+      const px=ox+u*Math.cos(a)*t*scale;
+      const py=base-(u*Math.sin(a)*t-.5*gg*t*t)*scale;
+      dot(px,py,12,C_PRIMARY_SOFT); dot(px,py,7,'#ffe3e8');
+      ctx.fillStyle=C_TEXT; ctx.font='11px system-ui';
+      ctx.fillText('R = '+R.toFixed(1)+' m', ox+R*scale*.62, base+20);
+      ctx.fillText('H = '+H.toFixed(1)+' m', ox+4, base-H*scale-10);
+    }
+
+    else if(current==='pendulum'){
+      const L=v[0], T=2*Math.PI*Math.sqrt(L/v[2]);
+      const ang=(v[1]*Math.PI/180)*Math.sin(anim*2*Math.PI/T);
+      const len=Math.min(h*.42,150);
+      const px=cx+Math.sin(ang)*len, py=cy-len*Math.cos(ang);
+      line(cx,cy-len-25,cx,cy+len+20,'#4a2c35');
+      line(cx-65,cy-len,cx+65,cy-len,'#8a5f6b',3);
+      line(cx,cy-len,px,py,C_PRIMARY,3);
+      dot(cx,cy-len,5,'#ffd9df');
+      dot(px,py,14,C_PRIMARY); dot(px-4,py-4,4,'#ffe3e8');
+      ctx.fillStyle=C_TEXT; ctx.font='12px system-ui';
+      ctx.fillText('L = '+L+' m', cx+12, cy-len/2);
+    }
+
+    else if(current==='spring'){
+      const mass=v[0], k=v[1], A=v[2], omega=Math.sqrt(k/mass);
+      const x=A*Math.cos(anim*omega)*Math.min(w*.7/(2*A),120);
+      const top=cy-100;
+      line(cx-100,top,cx+100,top,'#8a5f6b',3);
+      ctx.beginPath(); ctx.moveTo(cx,top);
+      for(let i=0;i<22;i++){ ctx.lineTo(cx+(i%2?14:-14), top+10+i*5); }
+      ctx.lineTo(cx+x, cy+35);
+      ctx.strokeStyle=C_PRIMARY; ctx.lineWidth=2; ctx.stroke();
+      ctx.fillStyle='#7a1230'; ctx.fillRect(cx+x-24,cy+35,48,42);
+      ctx.strokeStyle='#ff7a90'; ctx.strokeRect(cx+x-24,cy+35,48,42);
+      line(cx-130,cy+100,cx+130,cy+100,'#5a3a44');
+    }
+
+    else if(current==='wave'){
+      const amp=v[1]*45, f=v[0], phase=v[2]*Math.PI/180;
+      for(let j=0;j<2;j++){
+        ctx.beginPath();
+        for(let x=0;x<w;x+=2){
+          const y=cy+(j===0?-1:1)*amp*Math.sin(x*.035*f+anim*2+(j?phase:0));
+          x?ctx.lineTo(x,y):ctx.moveTo(x,y);
+        }
+        ctx.strokeStyle = j?C_AMBER:C_PRIMARY; ctx.lineWidth=2; ctx.stroke();
+      }
+      ctx.fillStyle=C_TEXT; ctx.font='12px system-ui';
+      ctx.fillText('Red: wave 1 · Gold: wave 2',14,24);
+    }
+
+    else if(current==='circuit'){
+      const left=w*.22, right=w*.78, top=h*.3, bot=h*.72;
+      ctx.strokeStyle=C_PRIMARY; ctx.lineWidth=3;
+      ctx.beginPath();
+      ctx.moveTo(left,top); ctx.lineTo(right,top); ctx.lineTo(right,bot); ctx.lineTo(left,bot); ctx.closePath();
+      ctx.stroke();
+      line(left,top-18,left,top+18,C_AMBER,4);
+      line(left+10,top-10,left+10,top+10,C_AMBER,2);
+      ctx.fillStyle='#2b1520'; ctx.fillRect(cx-27,top-13,54,26);
+      ctx.strokeStyle=C_AMBER; ctx.strokeRect(cx-27,top-13,54,26);
+      ctx.fillStyle='#ffe3e8'; ctx.font='13px system-ui';
+      ctx.fillText(v[1]+' Ω',cx-17,top+5);
+      ctx.fillStyle=C_TEXT;
+      ctx.fillText(v[0]+' V',left-10,top-30);
+      ctx.fillText('I = '+(v[0]/v[1]).toFixed(2)+' A',cx-42,bot+24);
+      for(let i=0;i<6;i++) dot(left+((anim*35+i*45)%(right-left)),top,3,'#ffd9a0');
+    }
+
+    else if(current==='lens'){
+      const axis=cy, lens=cx, f=Math.min(w*.15,v[1]*4);
+      const objX=lens-Math.min(w*.32,v[0]*3), objH=45;
+      line(12,axis,w-12,axis,'#5a3a44',1.5);
+      ctx.strokeStyle=C_PRIMARY; ctx.lineWidth=3;
+      ctx.beginPath();
+      ctx.moveTo(lens,axis-85);
+      ctx.quadraticCurveTo(lens+25,axis,lens,axis+85);
+      ctx.quadraticCurveTo(lens-25,axis,lens,axis-85);
+      ctx.stroke();
+      line(objX,axis,objX,axis-objH,C_AMBER,3);
+      dot(objX,axis-objH,4,C_AMBER);
+      const f1=lens-f, f2=lens+f;
+      line(f1,axis-6,f1,axis+6,'#ffd9df');
+      line(f2,axis-6,f2,axis+6,'#ffd9df');
+      ctx.fillStyle='#ffd9df'; ctx.font='11px system-ui';
+      ctx.fillText('F',f1-4,axis+20); ctx.fillText('F',f2-4,axis+20);
+      const u=Math.max(1,(lens-objX)/f);
+      const vimg=u===1?1000:(lens-objX)/(u-1);
+      const ix=lens+Math.min(w*.35,vimg*f);
+      line(objX,axis-objH,lens,axis,C_AMBER,1.5);
+      line(lens,axis-objH,lens,axis,C_PRIMARY,1.5);
+      line(lens,axis,ix,axis+(ix-lens)*objH/Math.max(1,lens-objX),C_PRIMARY,1.5);
+    }
+
+    else if(current==='energy'){
+      const ground=h*.82, trackL=w*.12, trackR=w*.88, maxH=h*.58;
+      const phase=(anim%4)/4;
+      const yy=maxH*(1-Math.cos(phase*Math.PI*2))/2;
+      const xx=trackL+(trackR-trackL)*phase;
+      ctx.beginPath();
+      ctx.moveTo(trackL,ground-maxH);
+      ctx.bezierCurveTo(w*.25,ground-maxH,w*.35,ground,w*.5,ground);
+      ctx.bezierCurveTo(w*.7,ground,w*.7,ground-maxH,w*.88,ground-maxH);
+      ctx.strokeStyle='#7a4a56'; ctx.lineWidth=4; ctx.stroke();
+      dot(xx,ground-maxH+yy,10,C_PRIMARY);
+      ctx.fillStyle=C_TEXT; ctx.font='12px system-ui';
+      ctx.fillText('PE ↔ KE',w*.44,25);
+      ctx.fillStyle=C_PRIMARY; ctx.fillRect(w*.12,h*.1,w*.35,8);
+      ctx.fillStyle=C_AMBER; ctx.fillRect(w*.47,h*.1,w*.35,8);
+    }
+
+    else if(current==='magnet'){
+      const bx=cx, by=cy, rad=Math.min(w,h)*.18;
+      ctx.save(); ctx.translate(bx,by); ctx.rotate(.12*Math.sin(anim));
+      ctx.fillStyle='#e03050'; ctx.fillRect(-rad,-18,rad,36);
+      ctx.fillStyle='#3b83d2'; ctx.fillRect(0,-18,rad,36);
+      ctx.fillStyle='white'; ctx.font='bold 14px system-ui';
+      ctx.fillText('N',-rad*.65,5); ctx.fillText('S',rad*.35,5);
+      ctx.restore();
+      for(let i=0;i<6;i++){
+        const rr=rad+18+i*13;
+        ctx.beginPath();
+        ctx.ellipse(cx,cy,rr,rr*.63,0,Math.PI,Math.PI*2);
+        ctx.strokeStyle='rgba(255,59,92,.4)'; ctx.lineWidth=1.5; ctx.stroke();
+        ctx.beginPath();
+        ctx.ellipse(cx,cy,rr,rr*.63,0,0,Math.PI);
+        ctx.stroke();
+      }
+    }
+
+    else if(current==='collision'){
+      const x1=w*.25+Math.sin(anim*1.3)*w*.12;
+      const x2=w*.75-Math.sin(anim*1.3)*w*.12;
+      const r1=10+v[0]*3, r2=23;
+      line(20,cy+35,w-20,cy+35,'#5a3a44',2);
+      dot(x1,cy,r1,C_PRIMARY); dot(x2,cy,r2,C_AMBER);
+      ctx.fillStyle='#ffd9df'; ctx.font='12px system-ui';
+      ctx.fillText('m₁ = '+v[0]+' kg',x1-28,cy-30);
+      ctx.fillText('m₂ = 2 kg',x2-32,cy-35);
+      ctx.fillStyle=C_TEXT;
+      ctx.fillText('Momentum conserved in ideal elastic collision',14,h-17);
+    }
+
+    else if(current==='centripetal'){
+      const r=Math.min(w,h)*.29, ang=anim*1.3;
+      const x=cx+r*Math.cos(ang), y=cy+r*Math.sin(ang);
+      ctx.beginPath(); ctx.arc(cx,cy,r,0,Math.PI*2);
+      ctx.strokeStyle=C_PRIMARY; ctx.lineWidth=2;
+      ctx.setLineDash([5,6]); ctx.stroke(); ctx.setLineDash([]);
+      line(x,y,cx,cy,C_AMBER,2);
+      dot(cx,cy,4,'#ffd9df'); dot(x,y,12,C_PRIMARY);
+      ctx.fillStyle=C_AMBER; ctx.font='12px system-ui';
+      ctx.fillText('aᶜ →',cx+r*.18,cy+r*.12);
+    }
+  }
+
+  function frame(ts){
+    if(!last) last=ts;
+    const dt=Math.min((ts-last)/1000,.05);
+    last=ts;
+    if(running) anim+=dt;
+    draw();
+    requestAnimationFrame(frame);
+  }
+
+  /* bindings */
+  document.querySelectorAll('#experimentList .exp').forEach(b=>{
+    b.addEventListener('click',()=>{
+      current=b.dataset.exp;
+      $('experimentSelect').value=current;
+      setupControls();
+      resize();
+    });
+  });
+  $('experimentSelect').addEventListener('change',e=>{
+    current=e.target.value;
+    setupControls(); resize();
+  });
+  [1,2,3].forEach(i=>$('param'+i).addEventListener('input',update));
+  $('physReset').addEventListener('click',()=>{ setupControls(); resize(); showToast('Experiment reset'); });
+
+  $('checkQuiz').addEventListener('click',()=>{
+    const chosen = document.querySelector('input[name="pquiz"]:checked');
+    const fb = $('quizFeedback');
+    if(!chosen){ fb.textContent='Choose an answer first.'; fb.style.color='var(--amber)'; return; }
+    const ok = Number(chosen.value)===configs[current].correct;
+    fb.textContent = ok ? '✓ Correct! Nice work.' : 'Not quite — review the concept and try again.';
+    fb.style.color = ok ? 'var(--green)' : 'var(--amber)';
+    if(ok) writeProg('phys',1);
+  });
+
+  window.addEventListener('resize',()=>{ resize(); });
+
+  setupControls();
+  resize();
+  requestAnimationFrame(frame);
+
+  return {
+    refresh(){ resize(); draw(); },
+    reset(){ setupControls(); }
+  };
+})();
+
+/* =========================================================
+   CHEMISTRY LAB
+   ========================================================= */
+const ChemLab = (function(){
+  const raw = `Water|H2O|Molecule|O|Bent|104.5°|4|2|Two O–H bonds and two lone pairs on oxygen; polar molecule.|O has 2 lone pairs; each H forms one bond.|Lone pairs compress the H–O–H angle below tetrahedral 109.5°.
+Ammonia|NH3|Molecule|N|Trigonal pyramidal|107°|4|3|Three N–H bonds and one lone pair.|N has 1 lone pair.|AX3E: electron geometry tetrahedral, molecular shape trigonal pyramidal.
+Methane|CH4|Molecule|C|Tetrahedral|109.5°|4|4|Four equivalent C–H single bonds.|C forms 4 single bonds, no lone pairs.|AX4 has tetrahedral molecular geometry.
+Carbon dioxide|CO2|Molecule|C|Linear|180°|2|2|Two C=O double bonds in a linear arrangement.|O=C=O; each O has 2 lone pairs.|Bond dipoles cancel; molecule is linear.
+Boron trifluoride|BF3|Molecule|B|Trigonal planar|120°|3|3|Three B–F bonds around boron.|B has 6 electrons around it in the simple Lewis model.|Electron-deficient boron is a classic octet exception.
+Sulfur dioxide|SO2|Molecule|S|Bent|~119°|3|2|Bent molecule; resonance descriptions are important.|Resonance contributors; lone pair on S in common VSEPR model.|Molecular shape is bent, not linear.
+Ammonium|NH4+|Ion|N|Tetrahedral|109.5°|4|4|Positive polyatomic ion.|Four N–H bonds; bracket structure with + charge.|Count total valence electrons and account for the + charge.
+Hydronium|H3O+|Ion|O|Trigonal pyramidal|~113°|4|3|Three O–H bonds and one lone pair.|Overall + charge; O has one lone pair.|AX3E shape.
+Hydroxide|OH-|Ion|O|Linear diatomic|—|4|1|Diatomic ion.|O–H bond and three lone pairs on O in Lewis representation.|Put the structure in brackets with a − charge.
+Nitrate|NO3-|Ion|N|Trigonal planar|120°|3|3|Three equivalent N–O positions in resonance model.|Resonance; overall − charge.|Equivalent N–O bonds in resonance hybrid.
+Carbonate|CO3^2-|Ion|C|Trigonal planar|120°|3|3|Three O atoms around carbon.|Resonance; overall 2− charge.|Do not treat one Lewis contributor as the only structure.
+Sulfate|SO4^2-|Ion|S|Tetrahedral|109.5°|4|4|Four O atoms around sulfur.|Overall 2− charge; resonance/bonding models vary by level.|Tetrahedral arrangement around S.
+Phosphate|PO4^3-|Ion|P|Tetrahedral|109.5°|4|4|Four O atoms around phosphorus.|Overall 3− charge.|Remember charge when counting valence electrons.
+Chlorate|ClO3-|Ion|Cl|Trigonal pyramidal|~107°|4|3|Three O atoms and a lone pair in common VSEPR treatment.|Resonance contributors; overall − charge.|AX3E in the common VSEPR model.
+Perchlorate|ClO4-|Ion|Cl|Tetrahedral|109.5°|4|4|Four O atoms around chlorine.|Overall − charge; resonance contributors.|AX4 tetrahedral shape.
+Nitrite|NO2-|Ion|N|Bent|~115°|3|2|Two O atoms around N.|Resonance; overall − charge.|AX2E model gives bent geometry.
+Cyanide|CN-|Ion|C|Linear diatomic|—|2|2|Diatomic species with strong multiple-bond character.|[C≡N]− common Lewis representation.|Account for extra electron due to − charge.
+Acetate|CH3COO-|Ion|C|Planar carboxylate|~120° at COO|3|3|Carboxylate group is approximately planar.|Two resonance contributors for COO−.|Equivalent C–O bonds in resonance hybrid.
+Peroxide|H2O2|Molecule|O|Non-planar|varies|4|2|Each O has one O–O bond, one O–H bond and two lone pairs.|H–O–O–H; not fully planar in gas phase.|Do not assume all four atoms lie in one plane.
+Ozone|O3|Molecule|O|Bent|~117°|3|2|Three oxygen atoms with resonance.|Two major resonance contributors.|Resonance explains equivalent O–O bonds.
+Ethene|C2H4|Organic|C|Trigonal planar at each C|120°|3|3|C=C double bond; each carbon is planar.|H2C=CH2.|Restricted rotation around the double bond.
+Ethyne|C2H2|Organic|C|Linear at each C|180°|2|2|C≡C triple bond.|HC≡CH.|Triple-bonded carbons are sp-hybridised in the usual model.
+Ethane|C2H6|Organic|C|Tetrahedral at each C|109.5°|4|4|Single C–C bond allows rotation.|H3C–CH3.|Each carbon has four sigma bonds.
+Methanol|CH4O|Organic|C|Tetrahedral at C|~109.5° at C|4|4|Alcohol with a C–O and O–H bond.|CH3OH; O has two lone pairs.|Hydrogen bonding affects physical properties.
+Ethanol|C2H6O|Organic|C|Tetrahedral at C|~109.5° at C|4|4|Two-carbon alcohol.|CH3CH2OH.|Distinguish alcohol functional group from ether.
+Formaldehyde|CH2O|Organic|C|Trigonal planar at C|~120°|3|3|Carbonyl carbon is trigonal planar.|H2C=O.|Carbonyl group is polar.
+Acetaldehyde|C2H4O|Organic|C|Trigonal planar at carbonyl C|~120°|3|3|Aldehyde with terminal carbonyl group.|CH3CHO.|Aldehydes can be oxidised to carboxylic acids.
+Acetone|C3H6O|Organic|C|Trigonal planar at carbonyl C|~120°|3|3|Ketone with carbonyl between two carbon groups.|CH3COCH3.|Ketone carbonyl is polar.
+Formic acid|CH2O2|Organic|C|Trigonal planar at COOH|~120°|3|3|Carboxylic acid group.|HCOOH.|Carboxyl group has resonance.
+Acetic acid|C2H4O2|Organic|C|Trigonal planar at COOH|~120°|3|3|Two-carbon carboxylic acid.|CH3COOH.|Weak acid in water.
+Benzene|C6H6|Organic|C|Planar hexagon|120°|3|3|Six-membered aromatic ring.|Delocalised pi electrons.|All ring C–C bonds are equivalent in the model.
+Hydrogen|H2|Molecule|H|Linear diatomic|—|1|1|Diatomic elemental molecule.|H–H single bond.|Each H follows duet rule.
+Nitrogen|N2|Molecule|N|Linear diatomic|—|1|1|Strong N≡N triple bond.|:N≡N:|Triple bond contributes to high bond strength.
+Oxygen|O2|Molecule|O|Linear diatomic|—|1|1|Diatomic molecule with double-bond model.|O=O; two lone pairs per O in simple Lewis model.|Molecular oxygen is paramagnetic (MO theory).
+Fluorine|F2|Molecule|F|Linear diatomic|—|1|1|Single F–F bond.|Each F has three lone pairs.|Halogens exist as diatomic molecules.
+Chlorine|Cl2|Molecule|Cl|Linear diatomic|—|1|1|Single Cl–Cl bond.|Each Cl has three lone pairs.|Halogens have seven valence electrons.
+Hydrogen chloride|HCl|Molecule|Cl|Linear diatomic|—|1|1|Polar covalent bond.|H–Cl; Cl has three lone pairs.|Dissociation in water gives acidic solution.
+Hydrogen fluoride|HF|Molecule|F|Linear diatomic|—|1|1|Very polar H–F bond.|H–F; F has three lone pairs.|HF has strong hydrogen bonding between molecules.
+Hydrogen sulfide|H2S|Molecule|S|Bent|~92°|4|2|Two S–H bonds and two lone pairs.|S has two lone pairs.|Bent shape, like water, but angle differs.
+Phosphine|PH3|Molecule|P|Trigonal pyramidal|~93.5°|4|3|Three P–H bonds and one lone pair.|P has one lone pair.|AX3E.
+Silane|SiH4|Molecule|Si|Tetrahedral|109.5°|4|4|Four Si–H bonds.|Four bonding pairs.|Group 14 hydride analogue of methane.
+Diborane|B2H6|Molecule|B|Bridged structure|varies|4|4|Electron-deficient molecule with bridging H atoms.|Contains 3-centre-2-electron bonds.|An octet-rule exception.
+Carbon disulfide|CS2|Molecule|C|Linear|180°|2|2|S=C=S arrangement.|Central C has two double bonds.|Analogous linear shape to CO2.
+Carbonyl sulfide|COS|Molecule|C|Linear|180°|2|2|O=C=S arrangement.|Central C has two double bonds.|Unsymmetrical molecule, dipoles do not fully cancel.
+Nitric oxide|NO|Molecule|N|Linear diatomic radical|—|2|2|Odd-electron species.|Lewis structure has an unpaired electron.|Odd-electron molecules can violate the octet rule.
+Nitrogen dioxide|NO2|Molecule|N|Bent radical|~134°|3|2|Odd-electron bent molecule.|Resonance and unpaired electron.|Distinguish neutral NO2 from nitrite NO2−.
+Dinitrogen tetroxide|N2O4|Molecule|N|Planar around N|varies|3|3|Dimer of NO2 with an N–N bond.|N2O4 ⇌ 2NO2.|Equilibrium depends on temperature.
+Dinitrogen monoxide|N2O|Molecule|N|Linear|~180°|2|2|Linear triatomic species.|Multiple resonance descriptions.|Known as nitrous oxide.
+Nitrous acid|HNO2|Molecule|N|Bent at N|~113°|3|2|O=N–OH connectivity in common model.|Resonance can contribute.|Weak acid; distinguish from nitric acid.
+Nitric acid|HNO3|Molecule|N|Trigonal planar around N|~120°|3|3|Planar nitrate-like group.|Resonance in NO3 portion.|Strong acid in aqueous solution.
+Hypochlorite|ClO-|Ion|Cl|Diatomic|—|4|1|Cl–O diatomic ion.|Overall − charge.|Oxidising/bleaching species in suitable compounds.
+Cyanate|OCN-|Ion|C|Linear|180°|2|2|O–C–N arrangement.|Resonance contributors.|Linear central carbon.
+Thiocyanate|SCN-|Ion|C|Linear|180°|2|2|S–C–N arrangement.|Resonance contributors.|Ambidentate ligand in coordination chemistry.
+Thiosulfate|S2O3^2-|Ion|S|Tetrahedral around central S|approx.|4|4|Central sulfur bonded to O and S atoms.|Overall 2− charge; resonance descriptions.|Recognise in iodometric titrations.
+Dichromate|Cr2O7^2-|Ion|Cr|Tetrahedral around each Cr|approx.|4|4|Two CrO4 tetrahedra share an O.|Overall 2− charge.|Common oxidising agent in redox chemistry.
+Chromate|CrO4^2-|Ion|Cr|Tetrahedral|109.5° approx.|4|4|Four O around Cr.|Overall 2− charge.|Chromate/dichromate equilibrium depends on pH.
+Permanganate|MnO4-|Ion|Mn|Tetrahedral|109.5° approx.|4|4|Four O around Mn.|Overall − charge.|Purple oxidising ion.
+Hexacyanoferrate(III)|[Fe(CN)6]3-|Ion|Fe|Octahedral coordination|90°|6|6|Six cyanide ligands around Fe.|Coordination complex; not a simple main-group Lewis case.|Coordination geometry is octahedral.
+Hexaaquairon(II)|[Fe(H2O)6]2+|Ion|Fe|Octahedral coordination|90°|6|6|Six water ligands around Fe.|Coordinate bonds from O lone pairs.|Transition-metal coordination compound.
+Hexaamminecobalt(III)|[Co(NH3)6]3+|Ion|Co|Octahedral coordination|90°|6|6|Six ammonia ligands around Co.|Coordinate bonds from N lone pairs.|Octahedral complex.
+Tetraamminecopper(II)|[Cu(NH3)4]2+|Ion|Cu|Square planar approx.|90°|4|4|Four ammonia ligands around Cu in common simplified representation.|Coordinate bonds.|Real Cu(II) complexes may distort.
+Tetrachlorocuprate(II)|[CuCl4]2-|Ion|Cu|Tetrahedral approx.|109.5°|4|4|Four chloride ligands around Cu.|Coordination complex.|Geometry can vary with environment.
+Xenon difluoride|XeF2|Molecule|Xe|Linear|180°|5|2|Two bonds and three lone pairs on Xe.|AX2E3.|Trigonal bipyramidal electron arrangement gives linear shape.
+Xenon tetrafluoride|XeF4|Molecule|Xe|Square planar|90°|6|4|Four Xe–F bonds and two lone pairs opposite.|AX4E2.|Octahedral electron geometry, square-planar molecular shape.
+Xenon trioxide|XeO3|Molecule|Xe|Trigonal pyramidal|~103°|4|3|Three Xe–O directions and one lone pair.|AX3E in simplified VSEPR.|Lone pair affects geometry.
+Sulfur trioxide|SO3|Molecule|S|Trigonal planar|120°|3|3|Three equivalent S–O directions in resonance model.|Resonance contributors.|Gas-phase SO3 is trigonal planar.
+Sulfur hexafluoride|SF6|Molecule|S|Octahedral|90°|6|6|Six S–F bonds.|AX6.|Bond angles are 90° and 180°.
+Phosphorus trichloride|PCl3|Molecule|P|Trigonal pyramidal|~100°|4|3|Three P–Cl bonds and lone pair.|AX3E.|Polar molecule.
+Phosphorus pentachloride|PCl5|Molecule|P|Trigonal bipyramidal|90°, 120°|5|5|Five P–Cl bonds.|AX5.|Three equatorial and two axial bonds.
+Phosphorus pentafluoride|PF5|Molecule|P|Trigonal bipyramidal|90°, 120°|5|5|Five P–F bonds.|AX5.|Trigonal bipyramidal shape.
+Chlorine trifluoride|ClF3|Molecule|Cl|T-shaped|~90°|5|3|Three bonds and two lone pairs.|AX3E2.|T-shaped molecular geometry.
+Bromine trifluoride|BrF3|Molecule|Br|T-shaped|~90°|5|3|Three bonds and two lone pairs.|AX3E2.|T-shaped molecular geometry.
+Iodine trichloride|ICl3|Molecule|I|T-shaped|~90°|5|3|Common monomer model is T-shaped.|AX3E2 model.|ICl3 can form a dimer in condensed phase.
+Iodine pentafluoride|IF5|Molecule|I|Square pyramidal|~90°|6|5|Five bonds and one lone pair.|AX5E.|Octahedral electron-domain arrangement.
+Bromine pentafluoride|BrF5|Molecule|Br|Square pyramidal|~90°|6|5|Five bonds and one lone pair.|AX5E.|Square pyramidal molecular geometry.
+Iodine heptafluoride|IF7|Molecule|I|Pentagonal bipyramidal|72°, 90°|7|7|Seven bonds around iodine.|AX7.|Pentagonal bipyramidal geometry.
+Sulfur dichloride|SCl2|Molecule|S|Bent|~103°|4|2|Two bonds and two lone pairs.|AX2E2.|Bent molecular shape.
+Selenium dichloride|SeCl2|Molecule|Se|Bent (model)|varies|4|2|Two bonds and lone-pair domains.|AX2E2 approximate model.|Use as a VSEPR comparison example.
+Silicon tetrafluoride|SiF4|Molecule|Si|Tetrahedral|109.5°|4|4|Four Si–F bonds.|AX4.|Non-polar due to symmetry.
+Tin tetrachloride|SnCl4|Molecule|Sn|Tetrahedral|109.5°|4|4|Four Sn–Cl bonds.|AX4.|Symmetric tetrahedral geometry.
+Aluminium chloride monomer|AlCl3|Molecule|Al|Trigonal planar|120°|3|3|Monomeric AlCl3 is trigonal planar.|Al has an incomplete octet in monomer model.|Condensed Al2Cl6 has bridging bonds.
+Boron trichloride|BCl3|Molecule|B|Trigonal planar|120°|3|3|Three B–Cl bonds.|Incomplete octet at B.|Planar and symmetrical.
+Boron trihydride|BH3|Molecule|B|Trigonal planar|120°|3|3|Electron-deficient monomer model.|B has six valence-shell electrons.|BH3 commonly dimerises/coordinates.
+Carbon tetrachloride|CCl4|Molecule|C|Tetrahedral|109.5°|4|4|Four C–Cl bonds.|AX4.|Non-polar overall due to symmetry.
+Chloroform|CHCl3|Molecule|C|Tetrahedral|~109.5°|4|4|One H and three Cl around carbon.|Four single bonds.|Molecule has a net dipole.
+Dichloromethane|CH2Cl2|Molecule|C|Tetrahedral|~109.5°|4|4|Two H and two Cl around carbon.|Four single bonds.|Polar molecule.
+Bromoform|CHBr3|Molecule|C|Tetrahedral|~109.5°|4|4|One H and three Br around carbon.|Four single bonds.|Tetrahedral central carbon.
+Ethanal|C2H4O|Organic|C|Trigonal planar at carbonyl C|~120°|3|3|Aldehyde, CH3CHO.|Carbonyl C=O.|Oxidation distinguishes aldehydes from ketones.
+Propene|C3H6|Organic|C|Trigonal planar at alkene C|~120°|3|3|Contains C=C and methyl group.|CH2=CHCH3.|Double-bond carbon is planar.
+Propyne|C3H4|Organic|C|Linear at alkyne C|180°|2|2|Contains terminal C≡C–H group.|CH3C≡CH.|Alkyne carbon is linear.
+Cyclohexane|C6H12|Organic|C|Chair conformation|~109.5°|4|4|Six-membered saturated ring, usually chair conformation.|Each C has four single bonds.|Chair conformation reduces angle/torsional strain.
+Glucose|C6H12O6|Organic|C|Mostly tetrahedral C in open-chain model|~109.5°|4|4|Polyfunctional carbohydrate; cyclic forms dominate in solution.|Many C–O and O–H bonds.|Formula alone does not describe its full structure.
+Glycine|C2H5NO2|Organic|C|Tetrahedral at alpha C|~109.5° at alpha C|4|4|Simplest amino acid.|Contains amine and carboxyl groups.|Often exists as zwitterion in water.
+Urea|CH4N2O|Organic|C|Trigonal planar at carbonyl C|~120°|3|3|Carbonyl attached to two amino groups.|Resonance gives partial C–N double-bond character.|Planarity around amide-like group.
+Methylamine|CH5N|Organic|N|Trigonal pyramidal at N|~107°|4|3|Amine nitrogen has one lone pair.|CH3NH2.|Basicity relates to N lone pair availability.
+Dimethyl ether|C2H6O|Organic|O|Bent at O|~110°|4|2|C–O–C linkage.|CH3OCH3; O has two lone pairs.|Isomer of ethanol; different functional group.
+Ethylamine|C2H7N|Organic|N|Trigonal pyramidal at N|~107°|4|3|Primary amine.|CH3CH2NH2.|Nitrogen has one lone pair.
+Acetonitrile|C2H3N|Organic|C|Linear at nitrile carbon|180°|2|2|Contains C≡N group.|CH3C≡N.|Nitrile carbon is linear.
+Ethyl ethanoate|C4H8O2|Organic|C|Trigonal planar at carbonyl C|~120°|3|3|Ester functional group.|CH3COOCH2CH3.|Esterification links acid and alcohol.
+Methyl ethanoate|C3H6O2|Organic|C|Trigonal planar at carbonyl C|~120°|3|3|Ester functional group.|CH3COOCH3.|Recognise the –COO– linkage.
+Propanoic acid|C3H6O2|Organic|C|Trigonal planar at COOH|~120°|3|3|Three-carbon carboxylic acid.|CH3CH2COOH.|Carboxyl group has resonance.
+Oxalate|C2O4^2-|Ion|C|Planar around each carboxylate C|~120°|3|3|Dicarboxylate ion.|Resonance in both COO groups.|Overall charge is 2−.
+Hydrogen carbonate|HCO3-|Ion|C|Trigonal planar around C|~120°|3|3|One OH group and two other O positions.|Resonance; overall − charge.|Amphiprotic behavior in acid-base systems.
+Hydrogen sulfate|HSO4-|Ion|S|Tetrahedral around S|~109.5°|4|4|Four O around sulfur, one protonated.|Overall − charge.|Can donate a proton in water.
+Amide|NH2-|Ion|N|Bent diatomic-center model|—|4|2|Amide ion has two N–H bonds and two lone pairs.|Overall − charge.|Very strong base; handle theoretical examples carefully.
+Azide|N3-|Ion|N|Linear|180°|2|2|Three nitrogen atoms in a linear arrangement.|Resonance and charge delocalisation.|Polyatomic ion; resonance is essential.
+Superoxide|O2-|Ion|O|Linear diatomic|—|1|1|Oxygen species with one unpaired electron in MO model.|Odd electron; charge −1.|Distinguish superoxide O2− from peroxide O2²−.
+Acetylide|C2^2-|Ion|C|Linear diatomic|180°|2|2|C≡C core in simplified model.|Overall 2− charge.|Formal ionic model used in acetylide salts.`;
+
+  const data = raw.trim().split('\n').map((line,i)=>{
+    const a = line.split('|');
+    return {id:i,name:a[0],formula:a[1],type:a[2],central:a[3],shape:a[4],angle:a[5],
+            domains:+a[6],bonds:+a[7],explain:a[8],lewis:a[9],note:a[10]};
+  });
+
+  let current = data[0], rotY=.5, rotX=.2, drag=null;
+
+  const atomColors = {H:'#f7f7f7',C:'#6a7a88',N:'#4d83dc',O:'#e85d5d',S:'#edbd45',
+    F:'#4cae88',Cl:'#36a978',P:'#df8d42',B:'#efc84b',Si:'#a58ad1',Xe:'#be83d1',
+    I:'#8f63ad',Br:'#a65d4b',Fe:'#b77942',Cu:'#d88a5d',Mn:'#7f6cb5',Cr:'#5eab79',Se:'#d1a34c',Sn:'#8fa2b2',Al:'#b8c4d0'};
+
+  function formulaHTML(s){
+    return s.replace(/([0-9]+)/g,'<sub>$1</sub>').replace(/\^([0-9]*[+-])/g,'<sup>$1</sup>');
+  }
+
+  function renderList(){
+    const q = $('search').value.toLowerCase(), f = $('filter').value;
+    const filtered = data.filter(x =>
+      (x.name+' '+x.formula+' '+x.shape+' '+x.type).toLowerCase().includes(q) &&
+      (f==='all' || x.type===f));
+    $('count').textContent = filtered.length+' / '+data.length+' species';
+    $('speciesList').innerHTML = filtered.map(x=>
+      `<button class="species ${x.id===current.id?'active':''}" data-id="${x.id}">
+         <span><b>${x.name}</b><br><small>${x.formula}</small></span>
+         <span class="pill">${x.type}</span>
+       </button>`).join('');
+    $('speciesList').querySelectorAll('button').forEach(b=>{
+      b.onclick = ()=> selectSpecies(+b.dataset.id);
+    });
+  }
+
+  function selectSpecies(id){
+    current = data[id];
+    rotX=.2; rotY=.5;
+    renderList();
+    $('speciesName').textContent = current.name;
+    $('speciesFormula').innerHTML = formulaHTML(current.formula);
+    $('category').textContent = current.type;
+    $('geometry').textContent = current.shape;
+    $('angle').textContent = current.angle;
+    $('central').textContent = current.central;
+    $('domains').textContent = current.domains;
+    $('explanation').textContent = current.explain;
+    $('lewis').textContent = current.lewis;
+    $('examNote').textContent = current.note;
+    draw();
+  }
+
+  function atomsFor(s){
+    const center = s.central;
+    const n = Math.max(1, Math.min(s.bonds || 2, 7));
+    let points = [[0,0,0]];
+    if(s.shape.includes('Linear')){
+      for(let i=0;i<n;i++) points.push([Math.cos(i*Math.PI*2/n),0,Math.sin(i*Math.PI*2/n)]);
+    } else if(s.shape.includes('Bent')){
+      points.push([-.75,.1,.6],[.75,.1,.6]);
+    } else if(s.shape.includes('Tetrahedral') || s.shape.includes('pyramidal')){
+      points.push([1,1,1],[-1,-1,1],[-1,1,-1],[1,-1,-1]);
+      points = points.slice(0,n+1);
+    } else if(s.shape.includes('planar') || s.shape.includes('Planar') || s.shape.includes('hexagon')){
+      for(let i=0;i<n;i++) points.push([Math.cos(i*2*Math.PI/n),0,Math.sin(i*2*Math.PI/n)]);
+    } else if(s.shape.includes('Octahedral') || s.shape.includes('octahedral')){
+      points.push([1,0,0],[-1,0,0],[0,1,0],[0,-1,0],[0,0,1],[0,0,-1]);
+      points = points.slice(0,n+1);
+    } else if(s.shape.includes('bipyramidal')){
+      for(let i=0;i<n;i++){
+        const ang = i<3 ? i*2*Math.PI/3 : (i-3)*Math.PI;
+        points.push(i<3 ? [Math.cos(ang),-.2,Math.sin(ang)] : [0, i===3?1:-1, 0]);
+      }
+    } else if(s.shape.includes('T-shaped')){
+      points.push([0,1,0],[-1,-.4,0],[1,-.4,0]);
+    } else if(s.shape.includes('Square planar')){
+      points.push([1,0,0],[-1,0,0],[0,0,1],[0,0,-1]);
+    } else {
+      for(let i=0;i<n;i++) points.push([Math.cos(i*2*Math.PI/n), .25*Math.sin(i*4*Math.PI/n), Math.sin(i*2*Math.PI/n)]);
+    }
+
+    const symbols = (s.formula.match(/([A-Z][a-z]?)(\d*)/g) || [])
+      .map(t=>{ const m = t.match(/([A-Z][a-z]?)(\d*)/); return {sym:m[1], count:+(m[2]||1)}; });
+    let peripheral = symbols.flatMap(t=>Array(t.count).fill(t.sym)).filter(t=>t!==center);
+    if(!peripheral.length) peripheral = ['O','N'];
+
+    return points.map((p,i)=>({
+      p, sym: i===0 ? center : peripheral[(i-1)%peripheral.length]
+    }));
+  }
+
+  function draw(){
+    const c = $('moleculeCanvas');
+    if(!c) return;
+    const rect = c.getBoundingClientRect();
+    if(!rect.width || !rect.height) return;
+    const ctx = c.getContext('2d'), dpr = window.devicePixelRatio || 1;
+    c.width = Math.max(1, rect.width*dpr);
+    c.height = Math.max(1, rect.height*dpr);
+    ctx.setTransform(dpr,0,0,dpr,0,0);
+    const w = rect.width, h = rect.height;
+    ctx.clearRect(0,0,w,h);
+
+    const atoms = atomsFor(current).map(a=>{
+      const [x,y,z] = a.p;
+      const x1 = x*Math.cos(rotY) - z*Math.sin(rotY);
+      const z1 = x*Math.sin(rotY) + z*Math.cos(rotY);
+      const y1 = y*Math.cos(rotX) - z1*Math.sin(rotX);
+      const z2 = y*Math.sin(rotX) + z1*Math.cos(rotX);
+      const S = Math.min(w,h)*.25;
+      return {...a, x:w/2+x1*S, y:h/2+y1*S, z:z2};
+    });
+
+    atoms.forEach((a,i)=>{
+      if(i){
+        const b = atoms[0];
+        ctx.beginPath();
+        ctx.moveTo(a.x,a.y); ctx.lineTo(b.x,b.y);
+        ctx.lineWidth = 7; ctx.strokeStyle = '#6a4a56'; ctx.stroke();
+      }
+    });
+
+    atoms.sort((a,b)=>a.z-b.z).forEach(a=>{
+      const r = a.sym==='H' ? 12 : 19;
+      ctx.beginPath(); ctx.arc(a.x,a.y,r,0,Math.PI*2);
+      ctx.fillStyle = atomColors[a.sym] || '#4cae88';
+      ctx.shadowColor = 'rgba(0,0,0,.55)'; ctx.shadowBlur = 9;
+      ctx.fill(); ctx.shadowBlur = 0;
+      ctx.strokeStyle = a.sym==='H' ? '#aab8ba' : 'rgba(255,255,255,.6)';
+      ctx.lineWidth = 1.5; ctx.stroke();
+      ctx.fillStyle = ['H','F','O','S','Cl','B'].includes(a.sym) ? '#193137' : '#fff';
+      ctx.font = 'bold 12px system-ui';
+      ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+      ctx.fillText(a.sym, a.x, a.y);
+    });
+
+    ctx.fillStyle = 'rgba(255,255,255,.35)';
+    ctx.font = '11px system-ui'; ctx.textAlign = 'left'; ctx.textBaseline = 'alphabetic';
+    ctx.fillText('Schematic model · drag to rotate', 12, 20);
+  }
+
+  /* pointer drag */
+  const mc = $('moleculeCanvas');
+  mc.addEventListener('pointerdown', e=>{
+    drag = {x:e.clientX, y:e.clientY};
+    mc.setPointerCapture(e.pointerId);
+  });
+  mc.addEventListener('pointermove', e=>{
+    if(!drag) return;
+    rotY += (e.clientX-drag.x)*.012;
+    rotX += (e.clientY-drag.y)*.012;
+    drag = {x:e.clientX, y:e.clientY};
+    draw();
+  });
+  mc.addEventListener('pointerup', ()=> drag=null);
+  mc.addEventListener('pointercancel', ()=> drag=null);
+
+  $('resetView').addEventListener('click', ()=>{ rotX=.2; rotY=.5; draw(); });
+  $('search').addEventListener('input', renderList);
+  $('filter').addEventListener('change', renderList);
+  window.addEventListener('resize', ()=>{ if($('view-chemistry').classList.contains('active')) draw(); });
+
+  /* calculators */
+  function moleCalc(){
+    const m = +$('mass').value, M = +$('molar').value;
+    $('moleOut').textContent = (m>=0 && M>0 && isFinite(m/M))
+      ? `n = m / M = ${m} / ${M} = ${(m/M).toPrecision(6)} mol`
+      : 'කරුණාකර valid mass සහ positive molar mass ඇතුළත් කරන්න.';
+  }
+  function concCalc(){
+    const n = +$('mol').value, v = +$('vol').value/1000;
+    $('concOut').textContent = (n>=0 && v>0)
+      ? `c = n / V = ${n} / ${v} = ${(n/v).toPrecision(6)} mol dm⁻³`
+      : 'Valid amount සහ volume ඇතුළත් කරන්න.';
+  }
+  function phCalc(){
+    const h = +$('hconc').value;
+    $('phOut').textContent = (h>0)
+      ? `pH = −log₁₀(${h}) = ${(-Math.log10(h)).toFixed(3)}\n(ideal dilute-solution approximation)`
+      : '[H⁺] ශුන්‍යයට වඩා වැඩි විය යුතුයි.';
+  }
+  $('btnMole').addEventListener('click', moleCalc);
+  $('btnConc').addEventListener('click', concCalc);
+  $('btnPh').addEventListener('click', phCalc);
+
+  /* quiz */
+  const questions = [
+    {q:'H₂O අණුවේ molecular shape එක කුමක්ද?',o:['Linear','Bent / V-shaped','Tetrahedral'],a:1,w:'O මත lone pairs දෙකක් ඇති නිසා molecular shape එක bent වේ.'},
+    {q:'CH₄ හි H–C–H bond angle එක ආසන්න වශයෙන්?',o:['90°','109.5°','180°'],a:1,w:'CH₄ tetrahedral නිසා angle එක 109.5° පමණ වේ.'},
+    {q:'1 mol එකක අංශු ගණන ආසන්න වශයෙන්?',o:['6.022 × 10²³','3.00 × 10⁸','1.602 × 10⁻¹⁹'],a:0,w:'Avogadro constant Nₐ ≈ 6.022 × 10²³ mol⁻¹.'},
+    {q:'BF₃ හි molecular geometry එක?',o:['Trigonal planar','Trigonal pyramidal','Bent'],a:0,w:'B වටා bonding domains තුනක් සහ lone pair එකක් නැති නිසා trigonal planar.'},
+    {q:'pH = ?',o:['log₁₀[H⁺]','−log₁₀[H⁺]','[H⁺]/[OH⁻]'],a:1,w:'pH = −log₁₀[H⁺] යනු dilute aqueous solution සඳහා භාවිත සරල සම්බන්ධතාවයයි.'},
+    {q:'AX₄ VSEPR model එකේ shape එක?',o:['Tetrahedral','Square planar','Linear'],a:0,w:'AX₄ හි bonding domains හතර tetrahedral geometry එකක් සකස් කරයි.'},
+    {q:'NH₃ අණුවේ shape එක?',o:['Tetrahedral','Trigonal pyramidal','Linear'],a:1,w:'N මත lone pair එකක් ඇති නිසා AX₃E → trigonal pyramidal.'},
+    {q:'CO₂ අණුවේ shape එක?',o:['Bent','Linear','Trigonal planar'],a:1,w:'O=C=O linear; dipoles cancel වේ.'}
+  ];
+  let qIdx=0, score=0;
+  function loadQuestion(){
+    const q = questions[qIdx % questions.length];
+    $('qText').textContent = q.q;
+    $('qOptions').innerHTML = q.o.map((x,i)=>
+      `<button class="species" style="display:block;width:100%;text-align:left;border:1px solid var(--border);background:var(--surface-2);margin-bottom:6px;padding:10px 12px" data-a="${i}">${String.fromCharCode(65+i)}. ${x}</button>`
+    ).join('');
+    $('qFeedback').textContent = '';
+    $('qOptions').querySelectorAll('button').forEach(b=>{
+      b.onclick = ()=>{
+        if(b.dataset.done) return;
+        const ok = +b.dataset.a === q.a;
+        $('qFeedback').textContent = (ok?'✅ නිවැරදියි! ':'❌ නිවැරදි පිළිතුර: '+q.o[q.a]+'. ') + q.w;
+        $('qFeedback').style.color = ok ? 'var(--green)' : 'var(--amber)';
+        if(ok){ score++; $('score').textContent = 'Score: '+score; writeProg('chem',1); }
+        b.dataset.done = '1';
+        $('qOptions').querySelectorAll('button').forEach(x=>{ x.disabled = true; x.style.opacity = .7; });
+      };
+    });
+  }
+  $('nextQ').addEventListener('click', ()=>{ qIdx++; loadQuestion(); });
+
+  renderList();
+  selectSpecies(0);
+  loadQuestion();
+
+  return { refresh(){ draw(); } };
+})();
+
+/* =========================================================
+   MATHS
+   ========================================================= */
+(function(){
+  const f = n => (Math.abs(n) < 1e-10 ? '0' : (+n.toFixed(6)).toString());
+
+  function quadSolve(){
+    const a=+$('qa').value, b=+$('qb').value, c=+$('qc').value;
+    const out=$('quadOut');
+    if(!isFinite(a)||!isFinite(b)||!isFinite(c)){ out.textContent='Enter valid numbers.'; return; }
+    if(a===0){ out.textContent='a must not be 0 for a quadratic equation.'; return; }
+    const d = b*b - 4*a*c;
+    let s = '';
+    if(d>0){
+      s = `Δ = b² − 4ac = ${f(d)}  → two distinct real roots\nx₁ = ${f((-b+Math.sqrt(d))/(2*a))}\nx₂ = ${f((-b-Math.sqrt(d))/(2*a))}`;
+    } else if(d===0){
+      s = `Δ = 0 → one repeated real root\nx = −b/2a = ${f(-b/(2*a))}`;
+    } else {
+      s = `Δ = ${f(d)} → complex conjugate roots\nx = ${f(-b/(2*a))} ± ${f(Math.sqrt(-d)/(2*a))}i`;
+    }
+    s += `\nVertex: ( ${f(-b/(2*a))} , ${f(c - b*b/(4*a))} )`;
+    out.textContent = s;
+  }
+
+  function triSolve(){
+    const mode = $('triMode').value;
+    const a = +$('ta').value, b = +$('tb').value;
+    const out = $('triOut');
+    if(!(a>0 && b>0)){ out.textContent='Enter positive values for a and b.'; return; }
+    const D = Math.PI/180;
+    if(mode==='sas'){
+      const Cd = +$('tC').value;
+      if(!(Cd>0 && Cd<180)){ out.textContent='Angle C must be between 0° and 180°.'; return; }
+      const C = Cd*D;
+      const c = Math.sqrt(a*a + b*b - 2*a*b*Math.cos(C));
+      const area = 0.5*a*b*Math.sin(C);
+      const A = Math.asin(Math.min(1, a*Math.sin(C)/c))/D;
+      const B = 180 - Cd - A;
+      out.textContent = `c = √(a²+b²−2ab cosC) = ${f(c)}\nA = ${f(A)}°\nB = ${f(B)}°\nC = ${f(Cd)}°\nArea = ½ab sinC = ${f(area)}\nPerimeter = ${f(a+b+c)}`;
+    } else {
+      const c = +$('tc').value;
+      if(!(c>0)){ out.textContent='Enter a positive value for c.'; return; }
+      if(!(a+b>c && a+c>b && b+c>a)){ out.textContent='These three sides cannot form a triangle.'; return; }
+      const C = Math.acos(Math.max(-1, Math.min(1, (a*a+b*b-c*c)/(2*a*b))));
+      const s = (a+b+c)/2;
+      const area = Math.sqrt(s*(s-a)*(s-b)*(s-c));
+      const A = Math.asin(Math.min(1, a*Math.sin(C)/c))/D;
+      const B = 180 - C/D - A;
+      out.textContent = `A = ${f(A)}°\nB = ${f(B)}°\nC = ${f(C/D)}°\nArea (Heron) = ${f(area)}\nPerimeter = ${f(a+b+c)}`;
+    }
+  }
+
+  function shapeCalc(){
+    const shape = $('shapeSel').value;
+    const r = +$('shapeR').value, h = +$('shapeH').value;
+    const out = $('shapeOut');
+    if(!(r>0)){ out.textContent='Radius must be positive.'; return; }
+    let s = '';
+    if(shape==='sphere'){
+      s = `Radius r = ${f(r)}\nSurface area = 4πr² = ${f(4*Math.PI*r*r)}\nVolume = (4/3)πr³ = ${f(4/3*Math.PI*r**3)}`;
+    } else if(shape==='cylinder'){
+      if(!(h>0)){ out.textContent='Height must be positive.'; return; }
+      s = `Radius r = ${f(r)}, Height h = ${f(h)}\nCurved surface = 2πrh = ${f(2*Math.PI*r*h)}\nTotal surface = 2πr(r+h) = ${f(2*Math.PI*r*(r+h))}\nVolume = πr²h = ${f(Math.PI*r*r*h)}`;
+    } else if(shape==='cone'){
+      if(!(h>0)){ out.textContent='Height must be positive.'; return; }
+      const l = Math.sqrt(r*r + h*h);
+      s = `Radius r = ${f(r)}, Height h = ${f(h)}\nSlant height l = √(r²+h²) = ${f(l)}\nCurved surface = πrl = ${f(Math.PI*r*l)}\nTotal surface = πr(r+l) = ${f(Math.PI*r*(r+l))}\nVolume = ⅓πr²h = ${f(Math.PI*r*r*h/3)}`;
+    } else {
+      s = `Radius r = ${f(r)}\nCircumference = 2πr = ${f(2*Math.PI*r)}\nArea = πr² = ${f(Math.PI*r*r)}`;
+    }
+    out.textContent = s;
+  }
+
+  function statCalc(){
+    const nums = $('statIn').value.split(/[\s,]+/).map(Number).filter(n=>isFinite(n));
+    const out = $('statOut');
+    if(nums.length<1){ out.textContent='Enter at least one number.'; return; }
+    const n = nums.length;
+    const sorted = [...nums].sort((a,b)=>a-b);
+    const mean = nums.reduce((s,x)=>s+x,0)/n;
+    const median = n%2 ? sorted[(n-1)/2] : (sorted[n/2-1]+sorted[n/2])/2;
+    const freq = {};
+    nums.forEach(x=>freq[x]=(freq[x]||0)+1);
+    let mode = '-', best = 0;
+    for(const k in freq){ if(freq[k]>best){ best=freq[k]; mode=k; } }
+    if(best===1) mode = 'no repeated value';
+    const varP = nums.reduce((s,x)=>s+(x-mean)**2,0)/n;
+    const varS = n>1 ? nums.reduce((s,x)=>s+(x-mean)**2,0)/(n-1) : 0;
+    out.textContent =
+      `n = ${n}\nMean x̄ = ${f(mean)}\nMedian = ${f(median)}\nMode = ${mode}\nRange = ${f(sorted[n-1]-sorted[0])}\nPopulation σ = ${f(Math.sqrt(varP))}\nSample s = ${f(Math.sqrt(varS))}`;
+  }
+
+  function ciCalc(){
+    const P=+$('ciP').value, r=+$('ciR').value, t=+$('ciT').value, n=+$('ciN').value;
+    const out=$('ciOut');
+    if(!(P>0) || !(t>=0) || !(n>0) || !isFinite(r)){ out.textContent='Enter valid values.'; return; }
+    const A = P*Math.pow(1 + r/(100*n), n*t);
+    const SIamt = P*(1 + r*t/100);
+    out.textContent =
+      `Compound amount A = ${f(A)}\nCompound interest = ${f(A-P)}\nSimple interest amount = ${f(SIamt)}\nSimple interest = ${f(SIamt-P)}`;
+  }
+
+  function seqCalc(){
+    const type = $('seqType').value;
+    const a = +$('seqA').value, d = +$('seqD').value;
+    const n = Math.max(1, Math.round(+$('seqN').value));
+    const out = $('seqOut');
+    if(!isFinite(a) || !isFinite(d)){ out.textContent='Enter valid numbers.'; return; }
+    if(type==='ap'){
+      const nth = a + (n-1)*d;
+      const sum = n/2*(2*a + (n-1)*d);
+      out.textContent = `Arithmetic sequence (n = ${n})\nTₙ = a + (n−1)d = ${f(nth)}\nSₙ = n/2 [2a + (n−1)d] = ${f(sum)}`;
+    } else {
+      const nth = a*Math.pow(d, n-1);
+      let sum;
+      if(Math.abs(d-1)<1e-12) sum = n*a;
+      else sum = a*(Math.pow(d,n)-1)/(d-1);
+      out.textContent = `Geometric sequence (n = ${n})\nTₙ = a·rⁿ⁻¹ = ${f(nth)}\nSₙ = a(rⁿ−1)/(r−1) = ${f(sum)}`;
+      if(Math.abs(d)<1) out.textContent += `\nS∞ = a/(1−r) = ${f(a/(1-d))}`;
+    }
+  }
+
+  function logCalc(){
+    const x=+$('logX').value, b=+$('logB').value;
+    const out=$('logOut');
+    if(!(x>0)){ out.textContent='x must be greater than 0.'; return; }
+    if(!(b>0) || b===1){ out.textContent='Base must be positive and not equal to 1.'; return; }
+    out.textContent =
+      `log_${b}(${x}) = ${f(Math.log(x)/Math.log(b))}\nln(${x}) = ${f(Math.log(x))}\nlog₁₀(${x}) = ${f(Math.log10(x))}`;
+  }
+
+  $('btnQuad').addEventListener('click', quadSolve);
+  $('btnTri').addEventListener('click', triSolve);
+  $('btnShape').addEventListener('click', shapeCalc);
+  $('btnStat').addEventListener('click', statCalc);
+  $('btnCi').addEventListener('click', ciCalc);
+  $('btnSeq').addEventListener('click', seqCalc);
+  $('btnLog').addEventListener('click', logCalc);
+
+  /* formula search */
+  $('formulaSearch').addEventListener('input', e=>{
+    const q = e.target.value.toLowerCase().trim();
+    document.querySelectorAll('#formulaGrid .fcard').forEach(card=>{
+      let anyVisible = false;
+      card.querySelectorAll('.frow').forEach(row=>{
+        const show = !q || row.textContent.toLowerCase().includes(q);
+        row.style.display = show ? '' : 'none';
+        if(show) anyVisible = true;
+      });
+      card.style.display = anyVisible ? '' : 'none';
+    });
+  });
+
+  /* maths quiz */
+  const mQuestions = [
+    {q:'x² − 5x + 6 = 0 සමීකරණයේ මූලයන්?',o:['x = 2, x = 3','x = −2, x = −3','x = 1, x = 6'],a:0,w:'(x−2)(x−3)=0 → x = 2 හෝ x = 3.'},
+    {q:'sin²θ + cos²θ = ?',o:['1','2','0'],a:0,w:'මෙය මූලික trigonometric identity එකයි.'},
+    {q:'d/dx (x³) = ?',o:['3x²','x²','3x'],a:0,w:'Power rule: d/dx(xⁿ) = n xⁿ⁻¹.'},
+    {q:'Sphere එකක පරිමාව?',o:['4πr²','(4/3)πr³','πr²h'],a:1,w:'V = (4/3)πr³; 4πr² යනු surface area එකයි.'},
+    {q:'AP එකක nth term එක?',o:['a + (n−1)d','a·rⁿ⁻¹','n/2(a+l)'],a:0,w:'Arithmetic progression: Tₙ = a + (n−1)d.'},
+    {q:'log(ab) = ?',o:['log a × log b','log a + log b','log a − log b'],a:1,w:'Logarithm product rule: log(ab) = log a + log b.'},
+    {q:'Cosine rule එක?',o:['a² = b² + c² − 2bc cos A','a/sinA = b/sinB','A = ½ab sinC'],a:0,w:'Cosine rule එකෙන් පැත්තක් හෝ කෝණයක් සොයාගත හැක.'},
+    {q:'Sample standard deviation එකේ denominator එක?',o:['n','n − 1','n + 1'],a:1,w:'Sample variance සඳහා (n−1) භාවිත වේ (Bessel correction).'}
+  ];
+  let mIdx = 0, mScore = 0;
+  function loadMathQ(){
+    const q = mQuestions[mIdx % mQuestions.length];
+    $('mQText').textContent = q.q;
+    $('mQOptions').innerHTML = q.o.map((x,i)=>
+      `<button class="species" style="display:block;width:100%;text-align:left;border:1px solid var(--border);background:var(--surface-2);margin-bottom:6px;padding:10px 12px" data-a="${i}">${String.fromCharCode(65+i)}. ${x}</button>`
+    ).join('');
+    $('mQFeedback').textContent = '';
+    $('mQOptions').querySelectorAll('button').forEach(b=>{
+      b.onclick = ()=>{
+        if(b.dataset.done) return;
+        const ok = +b.dataset.a === q.a;
+        $('mQFeedback').textContent = (ok?'✅ නිවැරදියි! ':'❌ නිවැරදි පිළිතුර: '+q.o[q.a]+'. ') + q.w;
+        $('mQFeedback').style.color = ok ? 'var(--green)' : 'var(--amber)';
+        if(ok){ mScore++; $('mScore').textContent = 'Score: '+mScore; writeProg('math',1); }
+        b.dataset.done='1';
+        $('mQOptions').querySelectorAll('button').forEach(x=>{ x.disabled = true; x.style.opacity = .7; });
+      };
+    });
+  }
+  $('mNextQ').addEventListener('click', ()=>{ mIdx++; loadMathQ(); });
+  loadMathQ();
+})();
+
+/* =========================================================
+   AI TUTOR
+   ========================================================= */
+(function(){
+  let subject = 'Physics';
+
+  const providers = {
+    chatgpt:    { name:'ChatGPT',    url: q => 'https://chatgpt.com/?q=' + encodeURIComponent(q) },
+    claude:     { name:'Claude',     url: q => 'https://claude.ai/new?q=' + encodeURIComponent(q) },
+    perplexity: { name:'Perplexity', url: q => 'https://www.perplexity.ai/search?q=' + encodeURIComponent(q) },
+    copilot:    { name:'Copilot',    url: q => 'https://copilot.microsoft.com/?q=' + encodeURIComponent(q) },
+    grok:       { name:'Grok',       url: q => 'https://grok.com/?q=' + encodeURIComponent(q) },
+    gemini:     { name:'Gemini',     url: () => 'https://gemini.google.com/app', copy:true },
+    deepseek:   { name:'DeepSeek',   url: () => 'https://chat.deepseek.com/', copy:true }
+  };
+
+  function buildPrompt(q){
+    return `You are an expert ${subject} tutor for a Sri Lankan G.C.E. A/L student. ` +
+           `Answer step by step, clearly, and use simple Sinhala with English technical terms where helpful. ` +
+           `If it is a calculation, show all working and the final answer with units.\n\nQuestion: ${q}`;
+  }
+
+  /* mini offline knowledge base */
+  const KB = [
+    {k:['projectile','range','45'], a:'Projectile range: R = u² sin2θ / g. Maximum when sin2θ = 1 → 2θ = 90° → θ = 45°. Max height H = u² sin²θ / 2g, flight time T = 2u sinθ / g.'},
+    {k:['newton','second law','f=ma','force'], a:"Newton's second law: F = ma. Net force (N) = mass (kg) × acceleration (m/s²). It is a vector equation — direction matters."},
+    {k:['ohm','v=ir','resistance'], a:"Ohm's law: V = I R. Also P = V I = I²R = V²/R. Resistance in series adds; in parallel, 1/R = 1/R₁ + 1/R₂ + …"},
+    {k:['pendulum','period'], a:'Simple pendulum period (small angle): T = 2π√(L/g). Frequency f = 1/T. Period does not depend on bob mass.'},
+    {k:['ph','log','acid'], a:'pH = −log₁₀[H⁺]. For a strong acid, [H⁺] ≈ acid concentration. For a weak acid, [H⁺] = √(Ka·c). pOH = 14 − pH (at 25 °C).'},
+    {k:['mole','avogadro','n=m/m'], a:'n = m / M (mol). N = n × Nₐ where Nₐ ≈ 6.022 × 10²³ mol⁻¹. Concentration c = n / V with V in dm³.'},
+    {k:['vsepr','shape','nh3','h2o'], a:'VSEPR: electron pairs repel and arrange as far apart as possible. AX₂ linear, AX₃ trigonal planar, AX₄ tetrahedral, AX₃E trigonal pyramidal (NH₃), AX₂E₂ bent (H₂O).'},
+    {k:['sine rule'], a:'Sine rule: a / sin A = b / sin B = c / sin C. Use it with a known side–opposite-angle pair.'},
+    {k:['cosine rule'], a:'Cosine rule: a² = b² + c² − 2bc cos A. Rearranged: cos A = (b² + c² − a²) / 2bc.'},
+    {k:['quadratic','root','equation'], a:'Quadratic formula: x = (−b ± √(b²−4ac)) / 2a. Discriminant Δ = b² − 4ac: Δ > 0 two real roots, Δ = 0 one repeated root, Δ < 0 complex roots.'},
+    {k:['derivative','differentiat','d/dx'], a:'Basic rules: d/dx(xⁿ) = nxⁿ⁻¹, d/dx(sin x) = cos x, d/dx(cos x) = −sin x, d/dx(eˣ) = eˣ, d/dx(ln x) = 1/x. Chain rule: dy/dx = dy/du × du/dx.'},
+    {k:['integral','integrat'], a:'∫xⁿ dx = xⁿ⁺¹/(n+1) + c (n ≠ −1). ∫(1/x) dx = ln|x| + c. ∫sin x dx = −cos x + c, ∫cos x dx = sin x + c.'},
+    {k:['momentum','collision'], a:'Momentum p = mv (vector). In collisions total momentum is conserved. In a perfectly elastic collision, kinetic energy is also conserved: v₁′ = ((m₁−m₂)u₁ + 2m₂u₂)/(m₁+m₂).'},
+    {k:['circular','centripetal'], a:'Circular motion: a = v²/r = ω²r, F = mv²/r. Period T = 2πr/v. Acceleration always points toward the centre.'},
+    {k:['sequence','series','arithmetic','geometric'], a:'AP: Tₙ = a + (n−1)d, Sₙ = n/2[2a + (n−1)d]. GP: Tₙ = a rⁿ⁻¹, Sₙ = a(rⁿ−1)/(r−1), S∞ = a/(1−r) when |r| < 1.'},
+    {k:['sphere','volume','cylinder','cone'], a:'Sphere V = (4/3)πr³, SA = 4πr². Cylinder V = πr²h, CSA = 2πrh. Cone V = ⅓πr²h, l = √(r²+h²).'}
+  ];
+
+  function localAnswer(q){
+    const t = q.toLowerCase();
+    let best = null, bestScore = 0;
+    KB.forEach(item=>{
+      let s = 0;
+      item.k.forEach(k=>{ if(t.includes(k)) s++; });
+      if(s > bestScore){ bestScore = s; best = item; }
+    });
+    return bestScore > 0 ? best.a : null;
+  }
+
+  function refreshQuick(){
+    const q = $('aiQuestion').value.trim();
+    const box = $('quickAnswer');
+    if(!q){
+      box.innerHTML = '💡 ඔබ type කරන ප්‍රශ්නයට ගැලපෙන offline quick answer එකක් තිබේ නම් මෙතැන පෙන්වයි. සම්පූර්ණ පිළිතුරක් සඳහා ඉහත AI provider එකක් තෝරන්න.';
+      return;
+    }
+    const a = localAnswer(q);
+    if(a){
+      box.innerHTML = '<b>💡 Quick answer:</b><br>' + a + '<br><br><span style="font-size:11.5px;opacity:.7">සම්පූර්ණ පැහැදිලි කිරීමක් සහ උදාහරණ සඳහා පහත AI provider එකක් තෝරන්න.</span>';
+    } else {
+      box.innerHTML = '<b>🤖 සූදානම්!</b><br>මෙම ප්‍රශ්නයට offline පිළිතුරක් නැත. ඉහත AI provider එකක් තෝරන්න — එය ඔබේ ප්‍රශ්නය සමඟ විවෘත වේ.';
+    }
+  }
+
+  $('aiQuestion').addEventListener('input', refreshQuick);
+
+  document.querySelectorAll('#subjectChips .chip').forEach(c=>{
+    c.addEventListener('click', ()=>{
+      document.querySelectorAll('#subjectChips .chip').forEach(x=>x.classList.remove('active'));
+      c.classList.add('active');
+      subject = c.dataset.subj;
+    });
+  });
+
+  document.querySelectorAll('#sampleList .sample-q').forEach(b=>{
+    b.addEventListener('click', ()=>{
+      $('aiQuestion').value = b.dataset.q;
+      refreshQuick();
+      $('aiQuestion').focus();
+    });
+  });
+
+  document.querySelectorAll('.provider').forEach(btn=>{
+    btn.addEventListener('click', async ()=>{
+      const q = $('aiQuestion').value.trim();
+      if(!q){ showToast('Type a question first ✍️'); $('aiQuestion').focus(); return; }
+      const p = providers[btn.dataset.p];
+      const prompt = buildPrompt(q);
+      if(p.copy){
+        try{ await navigator.clipboard.writeText(prompt); showToast(p.name+' opened · prompt copied — paste it in the chat'); }
+        catch(e){ showToast('Opening '+p.name+' — copy your question manually'); }
+      }
+      window.open(p.url(prompt), '_blank', 'noopener');
+    });
+  });
+
+  $('aiCopy').addEventListener('click', async ()=>{
+    const q = $('aiQuestion').value.trim();
+    if(!q){ showToast('Nothing to copy'); return; }
+    try{ await navigator.clipboard.writeText(buildPrompt(q)); showToast('Prompt copied to clipboard ✓'); }
+    catch(e){ showToast('Copy failed — select and copy manually'); }
+  });
+
+  $('aiClear').addEventListener('click', ()=>{
+    $('aiQuestion').value = '';
+    refreshQuick();
+    $('aiQuestion').focus();
+  });
+
+  refreshQuick();
+})();
+
+/* =========================================================
+   INITIAL VIEW
+   ========================================================= */
+showView('home');
+</script>
+</body>
+</html>
